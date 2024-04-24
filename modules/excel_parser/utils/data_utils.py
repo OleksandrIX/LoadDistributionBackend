@@ -3,7 +3,7 @@ PARTITION_VALUE = "ВІЙСЬКОВИЙ  ІНСТИТУТ  ТЕЛЕКОМУНІ�
 """Map for table column names"""
 TABLE_COLUMNS: dict = {
     2: "education_component_code",
-    3: "discipline_name",
+    3: "education_component_name",
     4: "department",
     5: "credits",
     6: "hours",

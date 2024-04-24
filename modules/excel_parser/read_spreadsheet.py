@@ -1,14 +1,12 @@
 import os
 import re
 import math
-import pandas as pd
-import numpy as np
 from loguru import logger
-from openpyxl import load_workbook, Workbook
+from openpyxl import load_workbook
 from modules.excel_parser.utils.dataframe_utils import *
 from modules.excel_parser.utils.spreadsheet_utils import *
 from modules.excel_parser.utils.data_utils import *
-from exceptions.ParsingException import ParsingException
+from modules.excel_parser.exceptions.ParsingException import ParsingException
 
 
 def get_data_from_header_block(header_block_worksheet: Worksheet) -> dict[str, str]:
@@ -42,15 +40,12 @@ def get_data_from_table_block(table_dataframe: pd.DataFrame) -> list[dict]:
     """Parsed table block in worksheet"""
     table_data = []
     for _, row in table_dataframe.iterrows():
-        discipline = {}
         education_component = {}
 
         for column, value in row.items():
             key = get_column_name_by_number(column)
 
-            if key in ["discipline_name", "department"]:
-                discipline[key] = value
-            elif key in ["education_component_code", "credits", "hours"]:
+            if key in ["department", "education_component_name", "education_component_code", "credits", "hours"]:
                 education_component[key] = value
             else:
                 semester_number = get_semester_number_by_column(column)
@@ -74,19 +69,16 @@ def get_data_from_table_block(table_dataframe: pd.DataFrame) -> list[dict]:
                 elif key in ["term_papers", "modular_control_works", "calculation_graphic_works", "essays"]:
                     semester.setdefault("academic_task", {})[key] = value
                 elif key in ["exam", "graded_test"] and value != 0:
-                    semester.setdefault("reporting_type", {})
-                    semester["reporting_type"]["key"] = key
-                    semester["reporting_type"]["value"] = REPORTING_TYPES[key]
+                    semester.setdefault("reporting_type", REPORTING_TYPES[key])
 
         education_component["semesters"] = [semester for semester in education_component["semesters"] if
                                             all(semester.values())]
-        discipline.setdefault("education_component", education_component)
 
-        table_data.append(discipline)
+        table_data.append(education_component)
     return table_data
 
 
-def processing_of_spreadsheet(path_to_file: str, is_write_data: bool = False, path_to_json_file: str = "") -> list:
+def processing_of_spreadsheet(path_to_file: str) -> list:
     """Processes spreadsheet file"""
     workbook = load_workbook(path_to_file, read_only=True, data_only=True)
     sheet_specialties = [specialty for specialty in workbook.sheetnames if re.match(r"\b\d+\b", specialty)]
@@ -121,7 +113,7 @@ def processing_of_spreadsheet(path_to_file: str, is_write_data: bool = False, pa
                     "course_study": header_data["Курс навчання"],
                     "education_degree": header_data["Ступінь вищої освіти"],
                     "study_groups": header_data["Навчальна група"],
-                    "disciplines": table_data
+                    "education_components": table_data
                 })
             except ParsingException as ex:
                 ex.sheet_name = sheet
@@ -136,15 +128,4 @@ def processing_of_spreadsheet(path_to_file: str, is_write_data: bool = False, pa
     filename = os.path.basename(path_to_file)
     logger.success(f"Spreadsheet '{filename}' parsed successfully")
 
-    if is_write_data:
-        write_data_to_json_file(spreadsheet_result_data, path_to_json_file)
-
     return spreadsheet_result_data, errors
-
-
-def write_data_to_json_file(data, path_to_json_file):
-    import json
-
-    with open(path_to_json_file, "w", encoding="utf-8") as json_file:
-        json_file.write(json.dumps(data, indent=4, ensure_ascii=False))
-        logger.success(f"Data is written to the file: {os.path.basename(path_to_json_file)}")
