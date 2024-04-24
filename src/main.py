@@ -35,7 +35,7 @@ def processing_spreadsheets_with_file():
     import json
     import modules.excel_parser as excel_parser
 
-    json_file_path = "/home/oleksandrix/Projects/Python/LdsExcelParser/example/example.json"
+    json_file_path = "example/example.json"
 
     with open(json_file_path, "r", encoding="utf-8") as file:
         spreadsheets_data = json.load(file)
