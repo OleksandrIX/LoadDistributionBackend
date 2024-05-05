@@ -21,10 +21,6 @@ python-multipart = "0.0.9" # For upload file
 minio = "7.2.7" # For storage service
 
 
-[tool.poetry.scripts]
-start = "uvicorn --factory src.main:create_app --reload --port 8000"
-
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
