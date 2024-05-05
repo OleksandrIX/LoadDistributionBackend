@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "load-distribution"
+version = "0.1.0"
+description = ""
+authors = ["OleksandrIX <zagorenkosasha@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+loguru = "0.7.2" # For logging
+openpyxl = "3.2.0b1" # For working with excel files
+pandas = "2.2.1" # For working with excel files
+asyncpg = "0.29.0" # PostgreSQL DBAPI
+sqlalchemy = "2.0.29" # ORM
+pydantic = "2.6.4" # For validation data
+pydantic-settings = "2.2.1" # For validation data
+fastapi = "0.110.2" # For API
+uvicorn = "0.29.0" # For started FastAPI
+python-multipart = "0.0.9" # For upload file
+minio = "7.2.7" # For storage service
+
+
+[tool.poetry.scripts]
+start = "uvicorn --factory src.main:create_app --reload --port 8000"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
