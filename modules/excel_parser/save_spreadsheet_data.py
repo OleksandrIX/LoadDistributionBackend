@@ -1,10 +1,11 @@
-import uuid
 from loguru import logger
 
 from .spreadsheet_schemas import *
 
-from src.utils.database import session_factory
+from src.utils.database import async_session_maker
+from src.utils.unit_of_work import UnitOfWork
 from src.models import *
+from src.repositories import DepartmentRepository
 
 
 def get_current_semester_from_course_and_semester_number(course: int, semester: int) -> int:
@@ -69,7 +70,7 @@ def create_semester_model_from_schema(semester_schema: SemesterSchema, course_st
     return semester
 
 
-def processing_spreadsheet_data(spreadsheet_blocks: list[dict]) -> None:
+async def processing_spreadsheet_data(spreadsheet_blocks: list[dict]) -> None:
     """Function to process spreadsheet and save it to database"""
     for spreadsheet_block in spreadsheet_blocks:
         spreadsheet_data: SpreadsheetBlockSchema = get_spreadsheet_data(spreadsheet_block=spreadsheet_block)
@@ -78,35 +79,31 @@ def processing_spreadsheet_data(spreadsheet_blocks: list[dict]) -> None:
             for education_component in spreadsheet_block["education_components"]
         ]
 
-        with session_factory() as session:
+        uow = UnitOfWork()
+
+        async with uow:
             for education_component_schema in education_components:
                 education_component_schema.education_component_name = education_component_schema.education_component_name.strip()
                 education_component_schema.education_component_code = education_component_schema.education_component_code.strip()
 
                 try:
-                    department: DepartmentModel = session.query(DepartmentModel).filter_by(
-                        department_code=education_component_schema.department
-                    ).first()
+                    department: DepartmentModel = await uow.department.get_one(
+                        department_code=education_component_schema.department)
 
-                    if not department:
-                        logger.warning("Department not found for")
+                    specialization: SpecializationModel = await uow.specialization.get_one(
+                        specialization_name=spreadsheet_data.specialization_name)
+
+                    if not department or not specialization:
+                        logger.warning("Department or Specialization not found")
                         continue
 
-                    specialization: SpecializationModel = session.query(SpecializationModel).filter_by(
-                        specialization_name=spreadsheet_data.specialization_name
-                    ).first()
-
-                    if not specialization:
-                        logger.warning("Specialization not found for")
-                        continue
-
-                    education_component: EducationComponentModel = session.query(EducationComponentModel).filter_by(
+                    education_component: EducationComponentModel = await uow.education_component.get_one(
                         education_component_code=education_component_schema.education_component_code.strip(),
                         education_component_name=education_component_schema.education_component_name.strip(),
                         education_degree=spreadsheet_data.education_degree.name,
                         department_id=department.id,
                         specialization_id=specialization.id
-                    ).first()
+                    )
 
                     if not education_component:
                         education_component: EducationComponentModel = EducationComponentModel(
@@ -127,15 +124,15 @@ def processing_spreadsheet_data(spreadsheet_blocks: list[dict]) -> None:
                         education_component.specialtization = specialization
 
                         logger.info(f"Created education component: "
-                                    f"{education_component.education_component_code} --- "
+                                    f"{education_component.education_component_code} - "
                                     f"{education_component.education_component_name}")
                     else:
-                        logger.debug(f"Education component is exists: "
-                                     f"{education_component.education_component_code} --- "
-                                     f"{education_component.education_component_name}")
+                        logger.info(f"Education component is exists: "
+                                    f"{education_component.education_component_code} - "
+                                    f"{education_component.education_component_name}")
 
                     for group_code, number_listeners in spreadsheet_data.study_groups:
-                        study_group = session.query(StudyGroupModel).filter_by(group_code=group_code).first()
+                        study_group = await uow.study_group.get_one(group_code=group_code)
 
                         if not study_group:
                             study_group: StudyGroupModel = StudyGroupModel(
@@ -150,8 +147,8 @@ def processing_spreadsheet_data(spreadsheet_blocks: list[dict]) -> None:
                             education_component.study_groups.append(study_group)
                             logger.info(f"Append group {group_code} for {education_component.education_component_name}")
 
-                    session.add(education_component)
-                    session.commit()
+                    uow.session.add(education_component)
+                    await uow.commit()
                 except Exception as err:
                     logger.error(err)
-                    session.rollback()
+                    await uow.rollback()

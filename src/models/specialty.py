@@ -1,11 +1,11 @@
 from sqlalchemy import Column, UUID, String, ForeignKey
 from sqlalchemy.orm import relationship
 
-from ..utils.database import Base
-from .core import IdMixin, TimestampMixin
+from ..utils.database import LoadDistributionBase
+from ..utils.model import IdMixin, TimestampMixin
 
 
-class SpecialtyModel(Base, IdMixin, TimestampMixin):
+class SpecialtyModel(LoadDistributionBase, IdMixin, TimestampMixin):
     __tablename__ = "specialties"
 
     specialty_code = Column(String(20), nullable=False)

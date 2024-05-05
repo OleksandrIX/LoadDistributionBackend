@@ -1,11 +1,12 @@
 from sqlalchemy import Column, String, SmallInteger, CheckConstraint
 from sqlalchemy.orm import relationship
 
-from ..utils.database import Base
-from .core import IdMixin, TimestampMixin
+from ..schemas import DepartmentSchema
+from ..utils.database import LoadDistributionBase
+from ..utils.model import IdMixin, TimestampMixin
 
 
-class DepartmentModel(Base, IdMixin, TimestampMixin):
+class DepartmentModel(LoadDistributionBase, IdMixin, TimestampMixin):
     __tablename__ = "departments"
 
     department_code = Column(SmallInteger, nullable=False, unique=True)
@@ -15,3 +16,12 @@ class DepartmentModel(Base, IdMixin, TimestampMixin):
     education_components = relationship("EducationComponentModel", back_populates="department")
 
     __table_args__ = (CheckConstraint("department_code >= 1 and department_code <= 99"),)
+
+    def to_read_model(self) -> DepartmentSchema:
+        return DepartmentSchema(
+            id=self.id,
+            department_code=self.department_code,
+            department_name=self.department_name,
+            created_at=self.created_at,
+            updated_at=self.updated_at,
+        )

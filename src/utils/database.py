@@ -1,14 +1,16 @@
-from sqlalchemy import create_engine, Engine, MetaData
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy import MetaData
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncEngine
 
-from src.config.environment import database_settings
+from ..config import database_settings
 
-psql_engine: Engine = create_engine(url=database_settings.database_url, echo=False)
-session_factory = sessionmaker(bind=psql_engine, autoflush=False)
+psql_engine: AsyncEngine = create_async_engine(url=database_settings.database_url, echo=False)
+async_session_maker = async_sessionmaker(bind=psql_engine, autoflush=False, expire_on_commit=False)
 
 
-class Base(DeclarativeBase):
+class LoadDistributionBase(DeclarativeBase):
     metadata = MetaData("load_distribution")
+
     repr_cols_num = 3
     repr_cols = tuple()
 

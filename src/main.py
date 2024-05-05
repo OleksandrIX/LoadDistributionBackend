@@ -1,46 +1,21 @@
-import os
-import sys
-from loguru import logger
-from config import logger as logger_config
+from fastapi import FastAPI
+
+from .config import CustomizeLogger
+from .api import all_routers
+from .middlewares import ExceptionHandlerMiddleware
 
 
-@logger.catch
-def main():
-    logger_config.init_logger()
-    logger.info("Service started.")
+def create_app() -> FastAPI:
+    app = FastAPI(
+        title="Load distribution API",
+        version="0.1.0",
+        docs_url="/api/v1/docs"
+    )
+    app.logger = CustomizeLogger.make_logger()
 
-    # processing_spreadsheets_with_file()
-    processing_spreadsheets_with_parsing()
+    app.add_middleware(ExceptionHandlerMiddleware)
 
+    for router in all_routers:
+        app.include_router(router)
 
-@logger.catch
-def processing_spreadsheets_with_parsing():
-    import modules.excel_parser as excel_parser
-
-    paths = [
-        "example/data/excel/bachelor/RPND-bachelor.xlsx",
-        "example/data/excel/magistracy/RPND-magistracy.xlsx"
-    ]
-
-    for path in paths:
-        spreadsheets_data, errors = excel_parser.processing_of_spreadsheet(path)
-        logger.debug(f"{errors=}")
-
-        excel_parser.processing_spreadsheet_data(spreadsheets_data)
-        logger.success(f"File {path} processed")
-
-
-@logger.catch
-def processing_spreadsheets_with_file():
-    import json
-    import modules.excel_parser as excel_parser
-
-    json_file_path = "example/example.json"
-
-    with open(json_file_path, "r", encoding="utf-8") as file:
-        spreadsheets_data = json.load(file)
-        excel_parser.processing_spreadsheet_data(spreadsheets_data)
-
-
-if __name__ == "__main__":
-    main()
+    return app

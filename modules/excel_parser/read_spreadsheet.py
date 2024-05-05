@@ -95,7 +95,7 @@ def processing_of_spreadsheet(path_to_file: str) -> list:
         indexes, blocks = get_indexes_and_blocks_from_worksheet(worksheet, start_cell, end_cell)
 
         for index, block in zip(indexes, blocks):
-            logger.trace(f"Block: {block}, index: {index}")
+            logger.trace(f"Sheet: {sheet}, Block: {block}, Start row: {index + 1}")
             header_block, table_block, footer_block = get_subblocks_from_block(worksheet, block, index)
 
             try:
