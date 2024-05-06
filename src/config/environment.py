@@ -19,7 +19,7 @@ class ApplicationSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file="./environments/.env.application")
 
 
-class LogggerSettings(BaseSettings):
+class LoggerSettings(BaseSettings):
     LOG_DIR: str
     LOG_LEVEL: LogLevel
     LOG_ROTATION: str
@@ -72,6 +72,6 @@ class MinIOSettings(BaseSettings):
 
 
 application_settings = ApplicationSettings()
-logger_settings = LogggerSettings()
+logger_settings = LoggerSettings()
 database_settings = DatabaseSettings()
 minio_settings = MinIOSettings()
