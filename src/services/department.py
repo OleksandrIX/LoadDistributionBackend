@@ -31,12 +31,12 @@ class DepartmentService:
 
     @staticmethod
     async def edit_department(uow: IUnitOfWork, department_id: str, department: DepartmentSchema) -> DepartmentSchema:
+        department_dict: dict = department.model_dump()
         async with uow:
             try:
                 is_exists = await uow.departments.is_exists(id=department_id)
                 if not is_exists:
                     raise DepartmentNotFoundException(department_id)
-                department_dict: dict = department.model_dump()
                 updated_department = await uow.departments.edit_one(updated_data=department_dict, id=department_id)
                 await uow.commit()
                 return updated_department
