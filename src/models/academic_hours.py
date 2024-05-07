@@ -1,11 +1,11 @@
 from sqlalchemy import Column, SmallInteger, UUID, ForeignKey, CheckConstraint
 from sqlalchemy.orm import relationship
 
-from ..utils.database import Base
-from .core import IdMixin, TimestampMixin
+from ..utils.database import LoadDistributionBase
+from ..utils.model import IdMixin, TimestampMixin
 
 
-class AcademicHoursModel(Base, IdMixin, TimestampMixin):
+class AcademicHoursModel(LoadDistributionBase, IdMixin, TimestampMixin):
     __tablename__ = "academic_hours"
 
     amount_classroom_hours = Column(SmallInteger, nullable=False)

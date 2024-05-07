@@ -4,12 +4,12 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class LogLevel(str, Enum):
-    TRACE = "TRACE"
-    DEBUG = "DEBUG"
-    INFO = "INFO"
-    WARNING = "WARNING"
-    ERROR = "ERROR"
     CRITICAL = "CRITICAL"
+    ERROR = "ERROR"
+    WARNING = "WARNING"
+    INFO = "INFO"
+    DEBUG = "DEBUG"
+    TRACE = "TRACE"
 
 
 class ApplicationSettings(BaseSettings):
@@ -19,10 +19,9 @@ class ApplicationSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file="./environments/.env.application")
 
 
-class LogggerSettings(BaseSettings):
+class LoggerSettings(BaseSettings):
     LOG_DIR: str
-    STD_LEVEL: LogLevel
-    FILE_LEVEL: LogLevel
+    LOG_LEVEL: LogLevel
     LOG_ROTATION: str
     LOG_COMPRESSION: str
 
@@ -52,11 +51,27 @@ class DatabaseSettings(BaseSettings):
 
     @property
     def database_url(self):
-        return f"postgresql+psycopg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     model_config = SettingsConfigDict(env_file="./environments/.env.database")
 
 
+class MinIOSettings(BaseSettings):
+    MINIO_HOST: str
+    MINIO_PORT: int
+    MINIO_ACCESS_KEY: str
+    MINIO_SECRET_KEY: str
+    MINIO_BUCKET_NAME: str
+    MINIO_SECURE: bool
+
+    @property
+    def minio_url(self):
+        return f"{self.MINIO_HOST}:{self.MINIO_PORT}"
+
+    model_config = SettingsConfigDict(env_file="./environments/.env.minio")
+
+
 application_settings = ApplicationSettings()
-logger_settings = LogggerSettings()
+logger_settings = LoggerSettings()
 database_settings = DatabaseSettings()
+minio_settings = MinIOSettings()

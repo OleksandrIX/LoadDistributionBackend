@@ -1,14 +1,12 @@
+from uuid import UUID
 from datetime import datetime
-from uuid import UUID as uuid_type
 from pydantic import BaseModel
 
 
 class IdMixinSchema(BaseModel):
-    id: uuid_type = None
+    id: UUID
 
 
 class TimestampMixinSchema(BaseModel):
-    created_at: datetime = None
-    updated_at: datetime = None
-
-
+    created_at: datetime
+    updated_at: datetime
