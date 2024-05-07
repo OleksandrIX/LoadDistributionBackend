@@ -25,7 +25,7 @@ async def get_education_component_by_id(uow: UOWDependencies, education_componen
 async def create_education_component(uow: UOWDependencies, education_component: EducationComponentCreateSchema) -> str:
     education_component_id = await EducationComponentService.create_education_component(uow, education_component)
     logger.success(f"Created education component with id '{education_component_id}'")
-    return education_component_id
+    return str(education_component_id)
 
 
 @router.put("/{education_component_id}", response_model=EducationComponentSchema, status_code=200)

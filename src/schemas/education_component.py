@@ -9,6 +9,8 @@ class EducationComponentBase(BaseModel):
     education_degree: EducationDegreeEnum
     credits: int = Field(..., gt=0, le=100)
     hours: int = Field(..., ge=1, le=1000)
+    department_id: str
+    specialization_id: str
 
 
 class EducationComponentCreateSchema(EducationComponentBase):
