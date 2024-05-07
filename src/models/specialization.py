@@ -1,6 +1,7 @@
 from sqlalchemy import Column, String, UUID, ForeignKey
 from sqlalchemy.orm import relationship
 
+from ..schemas import SpecializationSchema
 from ..utils.database import LoadDistributionBase
 from ..utils.model import IdMixin, TimestampMixin
 
@@ -14,3 +15,13 @@ class SpecializationModel(LoadDistributionBase, IdMixin, TimestampMixin):
 
     specialty = relationship("SpecialtyModel", back_populates="specializations")
     education_components = relationship("EducationComponentModel", back_populates="specialization")
+
+    def to_read_model(self) -> SpecializationSchema:
+        return SpecializationSchema(
+            id=self.id,
+            specialization_code=self.specialization_code,
+            specialization_name=self.specialization_name,
+            specialty_id=str(self.specialty_id),
+            created_at=self.created_at,
+            updated_at=self.updated_at,
+        )
