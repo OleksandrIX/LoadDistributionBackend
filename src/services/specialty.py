@@ -6,7 +6,7 @@ from ..utils.unit_of_work import IUnitOfWork
 
 class SpecialtyService:
     @staticmethod
-    async def get_specialty(uow: IUnitOfWork) -> list[SpecialtySchema]:
+    async def get_specialties(uow: IUnitOfWork) -> list[SpecialtySchema]:
         async with uow:
             return await uow.specialties.get_all()
 
