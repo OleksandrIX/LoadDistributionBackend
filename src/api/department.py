@@ -37,7 +37,7 @@ async def edit_department(uow: UOWDependencies,
     return updated_department
 
 
-@router.delete("/{department_id}", status_code=204)
+@router.delete("/{department_id}", response_model=None, status_code=204)
 async def delete_department(uow: UOWDependencies, department_id: str) -> None:
     await DepartmentService.delete_department(uow, department_id)
     logger.success(f"Deleted department with id '{department_id}'")
