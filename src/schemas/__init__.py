@@ -11,3 +11,6 @@ from .specialization import (SpecializationSchema,
 from .education_component import (EducationComponentSchema,
                                   EducationComponentCreateSchema,
                                   EducationComponentUpdateSchema)
+from .study_group import (StudyGroupSchema,
+                          StudyGroupCreateSchema,
+                          StudyGroupUpdateSchema)
