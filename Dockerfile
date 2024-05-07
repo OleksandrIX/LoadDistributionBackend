@@ -13,3 +13,5 @@ RUN poetry install --no-root --no-interaction --no-ansi
 EXPOSE 8000
 
 COPY . .
+
+CMD ["uvicorn", "--factory", "src.main:create_app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
