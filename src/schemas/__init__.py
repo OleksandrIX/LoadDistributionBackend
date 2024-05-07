@@ -14,3 +14,6 @@ from .education_component import (EducationComponentSchema,
 from .study_group import (StudyGroupSchema,
                           StudyGroupCreateSchema,
                           StudyGroupUpdateSchema)
+from .semester import (SemesterSchema,
+                       SemesterCreateSchema,
+                       SemesterUpdateSchema)
