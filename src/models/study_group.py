@@ -2,6 +2,7 @@ from sqlalchemy import Column, Enum, String, SmallInteger, UniqueConstraint, Che
 from sqlalchemy.orm import relationship
 
 from .many_to_many_tables import education_components_study_groups
+from ..schemas import StudyGroupSchema
 from ..utils.database import LoadDistributionBase
 from ..utils.model import IdMixin, TimestampMixin
 
@@ -26,3 +27,14 @@ class StudyGroupModel(LoadDistributionBase, IdMixin, TimestampMixin):
         CheckConstraint("1 <= course_study <= 6"),
         CheckConstraint("1 <= number_listeners <= 50")
     )
+
+    def to_read_model(self) -> StudyGroupSchema:
+        return StudyGroupSchema(
+            id=self.id,
+            group_code=self.group_code,
+            course_stud=self.course_study,
+            education_degree=self.education_degree,
+            number_listeners=self.number_listeners,
+            created_at=self.created_at,
+            updated_at=self.updated_at
+        )
