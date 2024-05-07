@@ -22,3 +22,8 @@ class SpecializationConflictException(ConflictException):
 class EducationComponentConflictException(ConflictException):
     def __init__(self):
         super().__init__(massage="Education component with such data already exists")
+
+
+class StudyGroupConflictException(ConflictException):
+    def __init__(self):
+        super().__init__(massage="Study group with such data already exists")
