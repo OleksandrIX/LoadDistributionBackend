@@ -13,4 +13,4 @@ class SpecializationModel(LoadDistributionBase, IdMixin, TimestampMixin):
     specialty_id = Column(UUID(as_uuid=True), ForeignKey("specialties.id"), nullable=False)
 
     specialty = relationship("SpecialtyModel", back_populates="specializations")
-    education_components = relationship("EducationComponentModel", back_populates="specialtization")
+    education_components = relationship("EducationComponentModel", back_populates="specialization")
