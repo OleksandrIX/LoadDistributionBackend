@@ -25,7 +25,7 @@ class AcademicTaskService:
             try:
                 academic_task_id = await uow.academic_tasks.add_one(data=academic_task_dict)
                 await uow.commit()
-                return academic_task_id
+                return str(academic_task_id)
             except ConflictException:
                 raise AcademicTaskConflictException()
 

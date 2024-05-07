@@ -25,7 +25,7 @@ async def get_academic_hours_by_id(uow: UOWDependencies, academic_hours_id: str)
 async def create_academic_hours(uow: UOWDependencies, academic_hours: AcademicHoursCreateSchema) -> str:
     academic_hours_id = await AcademicHoursService.create_academic_hours(uow, academic_hours)
     logger.success(f"Created academic hours with id '{academic_hours_id}'")
-    return str(academic_hours_id)
+    return academic_hours_id
 
 
 @router.put("/{academic_hours_id}", response_model=AcademicHoursSchema, status_code=200)

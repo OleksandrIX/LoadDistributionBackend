@@ -25,7 +25,7 @@ class SemesterService:
             try:
                 semester_id = await uow.semesters.add_one(data=semester_dict)
                 await uow.commit()
-                return semester_id
+                return str(semester_id)
             except ConflictException:
                 raise SemesterConflictException()
 

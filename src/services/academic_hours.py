@@ -25,7 +25,7 @@ class AcademicHoursService:
             try:
                 academic_hours_id = await uow.academic_hours.add_one(data=academic_hours_dict)
                 await uow.commit()
-                return academic_hours_id
+                return str(academic_hours_id)
             except ConflictException:
                 raise AcademicHoursConflictException()
 

@@ -26,7 +26,7 @@ async def create_specialization(uow: UOWDependencies,
                                 specialization: SpecializationCreateSchema) -> str:
     specialization_id = await SpecializationService.create_specialization(uow, specialization)
     logger.success(f"Created specialization with id '{specialization_id}'")
-    return str(specialization_id)
+    return specialization_id
 
 
 @router.put("/{specialization_id}", response_model=SpecializationSchema, status_code=200)

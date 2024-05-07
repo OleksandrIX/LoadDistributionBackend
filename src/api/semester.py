@@ -25,7 +25,7 @@ async def get_semester_by_id(uow: UOWDependencies, semester_id: str) -> Semester
 async def create_semester(uow: UOWDependencies, semester: SemesterCreateSchema) -> str:
     semester_id = await SemesterService.create_semester(uow, semester)
     logger.success(f"Created semester with id '{semester_id}'")
-    return str(semester_id)
+    return semester_id
 
 
 @router.put("/{semester_id}", response_model=SemesterSchema, status_code=200)
