@@ -22,7 +22,7 @@ class ExceptionHandlerMiddleware(BaseHTTPMiddleware):
                 content={"error": "Client error", "message": http_exception.detail}
             )
         except Exception as exception:
-            logger.exception(f"({exception.__class__.__name__}) {exception}")
+            logger.error(f"({exception.__class__.__name__}) {exception}")
             return JSONResponse(
                 status_code=500,
                 content={"error": "Internal Server Error", "message": "An unexpected error occurred."}
