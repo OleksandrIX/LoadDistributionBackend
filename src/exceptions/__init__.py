@@ -1,8 +1,10 @@
 from .not_found import (NotFoundException,
                         DepartmentNotFoundException,
                         SpecialtyNotFoundException,
-                        SpecializationNotFoundException)
+                        SpecializationNotFoundException,
+                        EducationComponentNotFoundException)
 from .conflict import (ConflictException,
                        DepartmentConflictException,
                        SpecialtyConflictException,
-                       SpecializationConflictException)
+                       SpecializationConflictException,
+                       EducationComponentConflictException)

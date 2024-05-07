@@ -20,3 +20,9 @@ class SpecializationNotFoundException(NotFoundException):
     def __init__(self, specialization_id):
         massage = f"Specialization with id '{specialization_id}' not found"
         super().__init__(massage=massage)
+
+
+class EducationComponentNotFoundException(NotFoundException):
+    def __init__(self, education_component_id):
+        massage = f"Education component with id '{education_component_id}' not found"
+        super().__init__(massage=massage)
