@@ -45,8 +45,8 @@ class EducationComponentModel(LoadDistributionBase, IdMixin, TimestampMixin):
             education_degree=self.education_degree,
             credits=self.credits,
             hours=self.hours,
-            department_id=self.department_id,
-            specialization_id=self.specialization_id,
+            department_id=str(self.department_id),
+            specialization_id=str(self.specialization_id),
             created_at=self.created_at,
             updated_at=self.updated_at
         )
