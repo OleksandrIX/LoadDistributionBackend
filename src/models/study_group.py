@@ -32,7 +32,7 @@ class StudyGroupModel(LoadDistributionBase, IdMixin, TimestampMixin):
         return StudyGroupSchema(
             id=self.id,
             group_code=self.group_code,
-            course_stud=self.course_study,
+            course_study=self.course_study,
             education_degree=self.education_degree,
             number_listeners=self.number_listeners,
             created_at=self.created_at,
