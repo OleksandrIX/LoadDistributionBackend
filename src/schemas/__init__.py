@@ -20,3 +20,6 @@ from .semester import (SemesterSchema,
 from .academic_hours import (AcademicHoursSchema,
                              AcademicHoursCreateSchema,
                              AcademicHoursUpdateSchema)
+from .academic_task import (AcademicTaskSchema,
+                            AcademicTaskCreateSchema,
+                            AcademicTaskUpdateSchema)
