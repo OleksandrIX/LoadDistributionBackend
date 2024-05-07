@@ -2,6 +2,7 @@ from sqlalchemy import Column, Enum, String, Numeric, SmallInteger, UUID, Foreig
 from sqlalchemy.orm import relationship
 
 from .many_to_many_tables import education_components_study_groups
+from ..schemas import EducationComponentSchema
 from ..utils.database import LoadDistributionBase
 from ..utils.model import IdMixin, TimestampMixin
 
@@ -35,3 +36,17 @@ class EducationComponentModel(LoadDistributionBase, IdMixin, TimestampMixin):
         CheckConstraint("0.01 <= credits <= 100.00"),
         CheckConstraint("1 <= hours <= 1000")
     )
+
+    def to_read_model(self) -> EducationComponentSchema:
+        return EducationComponentSchema(
+            id=self.id,
+            education_component_name=self.education_component_name,
+            education_component_code=self.education_component_code,
+            education_degree=self.education_degree,
+            credits=self.credits,
+            hours=self.hours,
+            department_id=str(self.department_id),
+            specialization_id=str(self.specialization_id),
+            created_at=self.created_at,
+            updated_at=self.updated_at
+        )
