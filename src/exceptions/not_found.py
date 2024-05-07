@@ -44,3 +44,9 @@ class AcademicHoursNotFoundException(NotFoundException):
     def __init__(self, academic_hours_id):
         massage = f"Academic hours with id '{academic_hours_id}' not found"
         super().__init__(massage=massage)
+
+
+class AcademicTaskNotFoundException(NotFoundException):
+    def __init__(self, academic_task_id):
+        massage = f"Academic task with id '{academic_task_id}' not found"
+        super().__init__(massage=massage)

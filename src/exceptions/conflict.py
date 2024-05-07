@@ -37,3 +37,8 @@ class SemesterConflictException(ConflictException):
 class AcademicHoursConflictException(ConflictException):
     def __init__(self):
         super().__init__(massage="Academic hours with such data already exists")
+
+
+class AcademicTaskConflictException(ConflictException):
+    def __init__(self):
+        super().__init__(massage="Academic task with such data already exists")
