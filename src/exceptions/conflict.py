@@ -7,3 +7,13 @@ class ConflictException(Exception):
 class DepartmentConflictException(ConflictException):
     def __init__(self):
         super().__init__(massage="Department with such data already exists")
+
+
+class SpecialtyConflictException(ConflictException):
+    def __init__(self):
+        super().__init__(massage="Specialty with such data already exists")
+
+
+class SpecializationConflictException(ConflictException):
+    def __init__(self):
+        super().__init__(massage="Specialization with such data already exists")
