@@ -3,7 +3,7 @@ from fastapi import APIRouter
 
 from ..services import DepartmentService
 from ..schemas import DepartmentSchema, DepartmentCreateSchema, DepartmentUpdateSchema
-from ..utils.dependecies import UOWDependencies
+from ..utils.dependencies import UOWDependencies
 
 router = APIRouter(
     prefix="/api/v1/departments",
