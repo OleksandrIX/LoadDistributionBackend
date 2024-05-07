@@ -26,3 +26,9 @@ class EducationComponentNotFoundException(NotFoundException):
     def __init__(self, education_component_id):
         massage = f"Education component with id '{education_component_id}' not found"
         super().__init__(massage=massage)
+
+
+class StudyGroupNotFoundException(NotFoundException):
+    def __init__(self, study_group_id):
+        massage = f"Study group  with id '{study_group_id}' not found"
+        super().__init__(massage=massage)
