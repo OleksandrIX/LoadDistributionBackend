@@ -1,6 +1,7 @@
 from sqlalchemy import Column, SmallInteger, UUID, ForeignKey, CheckConstraint
 from sqlalchemy.orm import relationship
 
+from ..schemas import AcademicHoursSchema
 from ..utils.database import LoadDistributionBase
 from ..utils.model import IdMixin, TimestampMixin
 
@@ -24,3 +25,16 @@ class AcademicHoursModel(LoadDistributionBase, IdMixin, TimestampMixin):
         CheckConstraint("0 <= practical_hours <= 400"),
         CheckConstraint("0 <= self_study_hours <= 400"),
     )
+
+    def to_read_model(self) -> AcademicHoursSchema:
+        return AcademicHoursSchema(
+            id=self.id,
+            amount_classroom_hours=self.amount_classroom_hours,
+            lecture_hours=self.lecture_hours,
+            group_hours=self.group_hours,
+            practical_hours=self.practical_hours,
+            self_study_hours=self.self_study_hours,
+            semester_id=self.semester_id,
+            created_at=self.created_at,
+            updated_at=self.updated_at
+        )
