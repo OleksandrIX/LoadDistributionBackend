@@ -1,6 +1,7 @@
 from sqlalchemy import Column, SmallInteger, UUID, ForeignKey, CheckConstraint
 from sqlalchemy.orm import relationship
 
+from ..schemas import AcademicTaskSchema
 from ..utils.database import LoadDistributionBase
 from ..utils.model import IdMixin, TimestampMixin
 
@@ -22,3 +23,15 @@ class AcademicTaskModel(LoadDistributionBase, IdMixin, TimestampMixin):
         CheckConstraint("0 <= essays <= 10"),
         CheckConstraint("0 <= calculation_graphic_works <= 10")
     )
+
+    def to_read_model(self) -> AcademicTaskSchema:
+        return AcademicTaskSchema(
+            id=self.id,
+            term_papers=self.term_papers,
+            modular_control_works=self.modular_control_works,
+            essays=self.essays,
+            calculation_graphic_works=self.calculation_graphic_works,
+            semester_id=self.semester_id,
+            created_at=self.created_at,
+            updated_at=self.updated_at
+        )

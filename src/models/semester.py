@@ -1,6 +1,7 @@
 from sqlalchemy import Column, UUID, SmallInteger, Enum, ForeignKey, CheckConstraint
 from sqlalchemy.orm import relationship
 
+from ..schemas import SemesterSchema
 from ..utils.database import LoadDistributionBase
 from ..utils.model import IdMixin, TimestampMixin
 
@@ -23,3 +24,14 @@ class SemesterModel(LoadDistributionBase, IdMixin, TimestampMixin):
         CheckConstraint("1 <= semester_number <= 8"),
         CheckConstraint("0 <= total_amount_hours <= 1000")
     )
+
+    def to_read_model(self) -> SemesterSchema:
+        return SemesterSchema(
+            id=self.id,
+            semester_number=self.semester_number,
+            total_amount_hours=self.total_amount_hours,
+            reporting_type=self.reporting_type,
+            education_component_id=str(self.education_component_id),
+            created_at=self.created_at,
+            updated_at=self.updated_at
+        )

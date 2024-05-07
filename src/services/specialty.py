@@ -25,7 +25,7 @@ class SpecialtyService:
             try:
                 specialty_id = await uow.specialties.add_one(data=specialty_dict)
                 await uow.commit()
-                return specialty_id
+                return str(specialty_id)
             except ConflictException:
                 raise SpecialtyConflictException()
 

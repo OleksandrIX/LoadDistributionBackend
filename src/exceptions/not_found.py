@@ -30,5 +30,23 @@ class EducationComponentNotFoundException(NotFoundException):
 
 class StudyGroupNotFoundException(NotFoundException):
     def __init__(self, study_group_id):
-        massage = f"Study group  with id '{study_group_id}' not found"
+        massage = f"Study group with id '{study_group_id}' not found"
+        super().__init__(massage=massage)
+
+
+class SemesterNotFoundException(NotFoundException):
+    def __init__(self, semester_id):
+        massage = f"Semester with id '{semester_id}' not found"
+        super().__init__(massage=massage)
+
+
+class AcademicHoursNotFoundException(NotFoundException):
+    def __init__(self, academic_hours_id):
+        massage = f"Academic hours with id '{academic_hours_id}' not found"
+        super().__init__(massage=massage)
+
+
+class AcademicTaskNotFoundException(NotFoundException):
+    def __init__(self, academic_task_id):
+        massage = f"Academic task with id '{academic_task_id}' not found"
         super().__init__(massage=massage)

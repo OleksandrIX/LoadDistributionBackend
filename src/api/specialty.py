@@ -25,7 +25,7 @@ async def get_specialty_by_id(uow: UOWDependencies, specialty_id: str) -> Specia
 async def create_specialty(uow: UOWDependencies, specialty: SpecialtyCreateSchema) -> str:
     specialty_id = await SpecialtyService.create_specialty(uow, specialty)
     logger.success(f"Created specialty with id '{specialty_id}'")
-    return str(specialty_id)
+    return specialty_id
 
 
 @router.put("/{specialty_id}", response_model=SpecialtySchema, status_code=200)

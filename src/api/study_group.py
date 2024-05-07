@@ -25,7 +25,7 @@ async def get_study_group_by_id(uow: UOWDependencies, study_group_id: str) -> St
 async def create_study_group(uow: UOWDependencies, study_group: StudyGroupCreateSchema) -> str:
     study_group_id = await StudyGroupService.create_study_group(uow, study_group)
     logger.success(f"Created study group with id '{study_group_id}'")
-    return str(study_group_id)
+    return study_group_id
 
 
 @router.put("/{study_group_id}", response_model=StudyGroupSchema, status_code=200)

@@ -25,7 +25,7 @@ async def get_department_by_id(uow: UOWDependencies, department_id: str) -> Depa
 async def create_department(uow: UOWDependencies, department: DepartmentCreateSchema) -> str:
     department_id = await DepartmentService.create_department(uow, department)
     logger.success(f"Created department with id '{department_id}'")
-    return str(department_id)
+    return department_id
 
 
 @router.put("/{department_id}", response_model=DepartmentSchema, status_code=200)

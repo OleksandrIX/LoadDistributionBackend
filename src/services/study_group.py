@@ -25,7 +25,7 @@ class StudyGroupService:
             try:
                 study_group_id = await uow.study_groups.add_one(data=study_group_dict)
                 await uow.commit()
-                return study_group_id
+                return str(study_group_id)
             except ConflictException:
                 raise StudyGroupConflictException()
 

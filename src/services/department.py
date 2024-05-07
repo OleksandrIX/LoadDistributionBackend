@@ -25,7 +25,7 @@ class DepartmentService:
             try:
                 department_id = await uow.departments.add_one(data=department_dict)
                 await uow.commit()
-                return department_id
+                return str(department_id)
             except ConflictException:
                 raise DepartmentConflictException()
 

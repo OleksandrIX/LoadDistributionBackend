@@ -25,7 +25,7 @@ class EducationComponentService:
             try:
                 education_component_id = await uow.education_components.add_one(data=education_component_dict)
                 await uow.commit()
-                return education_component_id
+                return str(education_component_id)
             except ConflictException:
                 raise EducationComponentConflictException()
 

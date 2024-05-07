@@ -27,3 +27,18 @@ class EducationComponentConflictException(ConflictException):
 class StudyGroupConflictException(ConflictException):
     def __init__(self):
         super().__init__(massage="Study group with such data already exists")
+
+
+class SemesterConflictException(ConflictException):
+    def __init__(self):
+        super().__init__(massage="Semester with such data already exists")
+
+
+class AcademicHoursConflictException(ConflictException):
+    def __init__(self):
+        super().__init__(massage="Academic hours with such data already exists")
+
+
+class AcademicTaskConflictException(ConflictException):
+    def __init__(self):
+        super().__init__(massage="Academic task with such data already exists")

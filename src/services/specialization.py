@@ -25,7 +25,7 @@ class SpecializationService:
             try:
                 specialization_id = await uow.specializations.add_one(data=specialization_dict)
                 await uow.commit()
-                return specialization_id
+                return str(specialization_id)
             except ConflictException:
                 raise SpecializationConflictException()
 

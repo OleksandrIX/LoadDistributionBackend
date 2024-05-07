@@ -14,3 +14,12 @@ from .education_component import (EducationComponentSchema,
 from .study_group import (StudyGroupSchema,
                           StudyGroupCreateSchema,
                           StudyGroupUpdateSchema)
+from .semester import (SemesterSchema,
+                       SemesterCreateSchema,
+                       SemesterUpdateSchema)
+from .academic_hours import (AcademicHoursSchema,
+                             AcademicHoursCreateSchema,
+                             AcademicHoursUpdateSchema)
+from .academic_task import (AcademicTaskSchema,
+                            AcademicTaskCreateSchema,
+                            AcademicTaskUpdateSchema)
