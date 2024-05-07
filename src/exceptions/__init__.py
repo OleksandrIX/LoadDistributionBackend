@@ -4,11 +4,13 @@ from .not_found import (NotFoundException,
                         SpecializationNotFoundException,
                         EducationComponentNotFoundException,
                         StudyGroupNotFoundException,
-                        SemesterNotFoundException)
+                        SemesterNotFoundException,
+                        AcademicHoursNotFoundException)
 from .conflict import (ConflictException,
                        DepartmentConflictException,
                        SpecialtyConflictException,
                        SpecializationConflictException,
                        EducationComponentConflictException,
                        StudyGroupConflictException,
-                       SemesterConflictException)
+                       SemesterConflictException,
+                       AcademicHoursConflictException)
