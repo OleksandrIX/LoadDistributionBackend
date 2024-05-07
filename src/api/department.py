@@ -22,7 +22,7 @@ async def get_department_by_id(uow: UOWDependencies, department_id: str) -> Depa
 
 
 @router.post("", response_model=str, status_code=201)
-async def get_departments(uow: UOWDependencies, department: DepartmentCreateSchema) -> str:
+async def create_department(uow: UOWDependencies, department: DepartmentCreateSchema) -> str:
     department_id = await DepartmentService.create_department(uow, department)
     logger.success(f"Created department with id '{department_id}'")
     return str(department_id)
@@ -38,6 +38,6 @@ async def edit_department(uow: UOWDependencies,
 
 
 @router.delete("/{department_id}", status_code=204)
-async def get_departments(uow: UOWDependencies, department_id: str) -> None:
+async def delete_department(uow: UOWDependencies, department_id: str) -> None:
     await DepartmentService.delete_department(uow, department_id)
     logger.success(f"Deleted department with id '{department_id}'")
