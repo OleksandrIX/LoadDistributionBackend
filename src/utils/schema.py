@@ -16,3 +16,8 @@ class TimestampMixinSchema(BaseModel):
 class EducationDegreeEnum(str, Enum):
     bachelor = "bachelor"
     master = "master"
+
+
+class ReportingTypeEnum(str, Enum):
+    graded_test = "graded_test"
+    exam = "exam"
