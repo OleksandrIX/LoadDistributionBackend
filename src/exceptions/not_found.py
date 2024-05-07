@@ -10,6 +10,12 @@ class DepartmentNotFoundException(NotFoundException):
         super().__init__(massage=massage)
 
 
+class SpecialtyNotFoundException(NotFoundException):
+    def __init__(self, specialty_id):
+        massage = f"Specialty with id '{specialty_id}' not found"
+        super().__init__(massage=massage)
+
+
 class SpecializationNotFoundException(NotFoundException):
     def __init__(self, specialization_id):
         massage = f"Specialization with id '{specialization_id}' not found"
