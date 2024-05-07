@@ -17,3 +17,6 @@ from .study_group import (StudyGroupSchema,
 from .semester import (SemesterSchema,
                        SemesterCreateSchema,
                        SemesterUpdateSchema)
+from .academic_hours import (AcademicHoursSchema,
+                             AcademicHoursCreateSchema,
+                             AcademicHoursUpdateSchema)
