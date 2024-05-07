@@ -8,8 +8,8 @@ class DepartmentBase(BaseModel):
     department_code: int
     department_name: str
 
-    @field_validator("department_code")
     @classmethod
+    @field_validator("department_code")
     def validate_department_code(cls, value):
         if value < 1 or value > 99:
             logger.warning("Department code must be between 1 and 99")
