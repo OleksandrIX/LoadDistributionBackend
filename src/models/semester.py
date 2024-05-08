@@ -11,7 +11,7 @@ class SemesterModel(LoadDistributionBase, IdMixin, TimestampMixin):
 
     semester_number = Column(SmallInteger, nullable=False)
     total_amount_hours = Column(SmallInteger, nullable=False)
-    reporting_type = Column(Enum("graded_test", "exam",
+    reporting_type = Column(Enum("Диференційований залік", "Екзамен",
                                  name="reporting_type_enum",
                                  schema="load_distribution"), nullable=False)
     education_component_id = Column(UUID(as_uuid=True), ForeignKey("education_components.id"), nullable=False)
