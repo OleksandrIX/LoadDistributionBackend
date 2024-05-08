@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, Field
 
 from ..utils.schema import IdMixinSchema, TimestampMixinSchema, ReportingTypeEnum
@@ -6,7 +7,7 @@ from ..utils.schema import IdMixinSchema, TimestampMixinSchema, ReportingTypeEnu
 class SemesterBase(BaseModel):
     semester_number: int = Field(..., ge=1, le=8)
     total_amount_hours: int = Field(..., ge=0, le=1000)
-    reporting_type: ReportingTypeEnum
+    reporting_type: Optional[ReportingTypeEnum] = None
     education_component_id: str
 
 
