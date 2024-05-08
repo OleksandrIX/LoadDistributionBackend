@@ -1,0 +1,26 @@
+services:
+  load-distribution-api:
+    build: .
+    image: load-distribution-api:v0.2
+    container_name: ld-api-container
+    restart: always
+    command: "uvicorn --factory src.main:create_app --port 5000 --host 0.0.0.0"
+    ports:
+      - "5000:5000"
+    expose:
+      - "5000"
+    volumes:
+      - ./logs:/logs
+    networks:
+      - ld-api-network
+      - postgresql-db-network
+      - minio-storage-network
+
+networks:
+  ld-api-network:
+    name: ld-api-network
+    driver: bridge
+  postgresql-db-network:
+    external: true
+  minio-storage-network:
+    external: true
