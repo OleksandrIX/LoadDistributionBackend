@@ -15,6 +15,7 @@ class IUnitOfWork(ABC):
     semesters: Type[SemesterRepository]
     academic_hours: Type[AcademicHoursRepository]
     academic_tasks: Type[AcademicTaskRepository]
+    education_components_study_groups: Type[EducationComponentsStudyGroupsRepository]
 
     @abstractmethod
     def __init__(self):
@@ -53,6 +54,7 @@ class UnitOfWork:
         self.semesters = SemesterRepository(self.session)
         self.academic_hours = AcademicHoursRepository(self.session)
         self.academic_tasks = AcademicTaskRepository(self.session)
+        self.education_components_study_groups = EducationComponentsStudyGroupsRepository(self.session)
 
     async def __aexit__(self, *args):
         await self.rollback()
