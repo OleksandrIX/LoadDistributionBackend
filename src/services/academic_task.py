@@ -23,9 +23,9 @@ class AcademicTaskService:
         academic_task_dict = academic_task.model_dump()
         async with uow:
             try:
-                academic_task_id = await uow.academic_tasks.add_one(data=academic_task_dict)
+                academic_task: AcademicTaskSchema = await uow.academic_tasks.add_one(data=academic_task_dict)
                 await uow.commit()
-                return str(academic_task_id)
+                return str(academic_task.id)
             except ConflictException:
                 raise AcademicTaskConflictException()
 
