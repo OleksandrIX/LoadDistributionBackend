@@ -6,7 +6,8 @@ from .not_found import (NotFoundException,
                         StudyGroupNotFoundException,
                         SemesterNotFoundException,
                         AcademicHoursNotFoundException,
-                        AcademicTaskNotFoundException)
+                        AcademicTaskNotFoundException,
+                        CurriculumNotFoundException)
 from .conflict import (ConflictException,
                        DepartmentConflictException,
                        SpecialtyConflictException,

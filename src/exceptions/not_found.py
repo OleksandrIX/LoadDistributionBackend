@@ -50,3 +50,9 @@ class AcademicTaskNotFoundException(NotFoundException):
     def __init__(self, academic_task_id):
         massage = f"Academic task with id '{academic_task_id}' not found"
         super().__init__(massage=massage)
+
+
+class CurriculumNotFoundException(NotFoundException):
+    def __init__(self, curriculum_filename):
+        massage = f"Curriculum file with name '{curriculum_filename}' not found"
+        super().__init__(massage=massage)

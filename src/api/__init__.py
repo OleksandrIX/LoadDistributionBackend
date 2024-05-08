@@ -18,6 +18,5 @@ all_routers = [
     semester_router,
     academic_hours_router,
     academic_task_router,
-
-    curriculum_router,
+    curriculum_router
 ]
