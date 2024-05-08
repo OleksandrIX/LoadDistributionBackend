@@ -14,10 +14,10 @@ class TimestampMixinSchema(BaseModel):
 
 
 class EducationDegreeEnum(str, Enum):
-    bachelor = "bachelor"
-    master = "master"
+    bachelor = "бакалавр"
+    master = "магістр"
 
 
 class ReportingTypeEnum(str, Enum):
-    graded_test = "graded_test"
-    exam = "exam"
+    graded_test = "Диференційований залік"
+    exam = "Екзамен"
