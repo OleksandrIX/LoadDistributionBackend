@@ -6,7 +6,6 @@ from .study_group import router as study_group_router
 from .semester import router as semester_router
 from .academic_hours import router as academic_hours_router
 from .academic_task import router as academic_task_router
-
 from .curriculum import router as curriculum_router
 
 all_routers = [
