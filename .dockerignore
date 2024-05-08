@@ -1,0 +1,9 @@
+.idea/
+.vscode/
+
+README.md
+
+environments/example.env
+
+/**/__pycache__/
+poetry.lock
