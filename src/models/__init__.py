@@ -6,3 +6,4 @@ from .semester import SemesterModel
 from .academic_hours import AcademicHoursModel
 from .academic_task import AcademicTaskModel
 from .study_group import StudyGroupModel
+from .many_to_many_tables import EducationComponentsStudyGroupsModel
