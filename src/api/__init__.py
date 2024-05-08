@@ -8,7 +8,6 @@ from .academic_hours import router as academic_hours_router
 from .academic_task import router as academic_task_router
 
 from .curriculum import router as curriculum_router
-from .file import router as file_router
 
 all_routers = [
     department_router,
@@ -21,5 +20,4 @@ all_routers = [
     academic_task_router,
 
     curriculum_router,
-    file_router
 ]
