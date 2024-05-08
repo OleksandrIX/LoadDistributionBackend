@@ -1,10 +1,17 @@
-from sqlalchemy import Table, Column, UUID, ForeignKey
+from sqlalchemy import Column, UUID, ForeignKey
 
 from ..utils.database import LoadDistributionBase
+from ..schemas import EducationComponentsStudyGroupsSchema
 
-education_components_study_groups = Table(
-    "education_components_study_groups",
-    LoadDistributionBase.metadata,
-    Column("education_component_id", UUID(as_uuid=True), ForeignKey("education_components.id"), primary_key=True),
-    Column("study_group_id", UUID(as_uuid=True), ForeignKey("study_groups.id"), primary_key=True)
-)
+
+class EducationComponentsStudyGroupsModel(LoadDistributionBase):
+    __tablename__ = "education_components_study_groups"
+
+    education_component_id = Column(UUID(as_uuid=True), ForeignKey("education_components.id"), primary_key=True)
+    study_group_id = Column(UUID(as_uuid=True), ForeignKey("study_groups.id"), primary_key=True)
+
+    def to_read_model(self) -> EducationComponentsStudyGroupsSchema:
+        return EducationComponentsStudyGroupsSchema(
+            education_component_id=str(self.education_component_id),
+            study_group_id=str(self.study_group_id)
+        )
