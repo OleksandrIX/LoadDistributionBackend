@@ -1,4 +1,10 @@
-from .file import FileSchema
+from .curriculum import (CurriculumFileSchema,
+                         ParsedCurriculumSchema,
+                         CurriculumDataRequestSchema,
+                         CurriculumSpreadsheetBlockRequestSchema,
+                         CurriculumSpreadsheetBlockSchema,
+                         CurriculumEducationComponentSchema,
+                         CurriculumDataSavedResponseSchema)
 from .department import (DepartmentSchema,
                          DepartmentCreateSchema,
                          DepartmentUpdateSchema)
@@ -23,3 +29,4 @@ from .academic_hours import (AcademicHoursSchema,
 from .academic_task import (AcademicTaskSchema,
                             AcademicTaskCreateSchema,
                             AcademicTaskUpdateSchema)
+from .education_components_study_groups import EducationComponentsStudyGroupsSchema
