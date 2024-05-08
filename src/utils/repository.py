@@ -81,9 +81,9 @@ class SQLAlchemyRepository(AbstractRepository):
         :return: entity id
         """
         try:
-            stmt = insert(self.model).values(**data).returning(self.model.id)
+            stmt = insert(self.model).values(**data).returning(self.model)
             result = await self.session.execute(stmt)
-            return result.scalar_one()
+            return result.scalar_one().to_read_model()
         except IntegrityError:
             raise ConflictException()
 
