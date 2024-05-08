@@ -23,9 +23,9 @@ class SpecializationService:
         specialization_dict = specialization.model_dump()
         async with uow:
             try:
-                specialization_id = await uow.specializations.add_one(data=specialization_dict)
+                specialization: SpecializationSchema = await uow.specializations.add_one(data=specialization_dict)
                 await uow.commit()
-                return str(specialization_id)
+                return str(specialization.id)
             except ConflictException:
                 raise SpecializationConflictException()
 

@@ -1,6 +1,7 @@
 from openpyxl.worksheet.worksheet import Worksheet
 from openpyxl.cell.read_only import ReadOnlyCell
-from modules.excel_parser.utils.data_utils import *
+
+from .data_utils import PARTITION_VALUE
 
 
 def get_column_index(cell_name: str) -> str:
@@ -74,7 +75,9 @@ def get_start_and_end_row_for_table(block: Worksheet, start_row: int) -> tuple[i
     return start_table_row + start_row, end_table_row + start_row
 
 
-def get_indexes_and_blocks_from_worksheet(worksheet: Worksheet, start_cell: str, end_cell: str) -> tuple[list[int], list[str]]:
+def get_indexes_and_blocks_from_worksheet(worksheet: Worksheet,
+                                          start_cell: str,
+                                          end_cell: str) -> tuple[list[int], list[str]]:
     """Returns the tuple with arrays indexes and blocks ranges for the given worksheet"""
     row_end = get_row_index(end_cell)
     column_start = get_column_index(start_cell)

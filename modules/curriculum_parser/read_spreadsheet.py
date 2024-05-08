@@ -1,12 +1,21 @@
-import os
+import io
 import re
 import math
+import pandas as pd
+
 from loguru import logger
 from openpyxl import load_workbook
-from modules.excel_parser.utils.dataframe_utils import *
-from modules.excel_parser.utils.spreadsheet_utils import *
-from modules.excel_parser.utils.data_utils import *
-from modules.excel_parser.exceptions.ParsingException import ParsingException
+from openpyxl.worksheet.worksheet import Worksheet
+
+from .exceptions import ParsingException
+from .utils import (REPORTING_TYPES,
+                    get_column_name_by_number,
+                    get_subblocks_from_block,
+                    get_data_frame_from_cell_range,
+                    get_table_data_frame_from_block,
+                    get_semester_number_by_column,
+                    get_start_and_end_cell_from_cell_range,
+                    get_indexes_and_blocks_from_worksheet)
 
 
 def get_data_from_header_block(header_block_worksheet: Worksheet) -> dict[str, str]:
@@ -39,13 +48,15 @@ def get_data_from_header_block(header_block_worksheet: Worksheet) -> dict[str, s
 def get_data_from_table_block(table_dataframe: pd.DataFrame) -> list[dict]:
     """Parsed table block in worksheet"""
     table_data = []
-    for _, row in table_dataframe.iterrows():
+    for row_index, row in table_dataframe.iterrows():
         education_component = {}
 
         for column, value in row.items():
             key = get_column_name_by_number(column)
 
             if key in ["department", "education_component_name", "education_component_code", "credits", "hours"]:
+                if isinstance(value, float) and math.isnan(value):
+                    raise ParsingException("В таблиці відсутнє значення", row=row_index + 1, column=int(column))
                 education_component[key] = value
             else:
                 semester_number = get_semester_number_by_column(column)
@@ -78,9 +89,9 @@ def get_data_from_table_block(table_dataframe: pd.DataFrame) -> list[dict]:
     return table_data
 
 
-def processing_of_spreadsheet(path_to_file: str) -> list:
+def processing_of_curriculum(curriculum_file: io.FileIO, curriculum_name) -> tuple[list, list]:
     """Processes spreadsheet file"""
-    workbook = load_workbook(path_to_file, read_only=True, data_only=True)
+    workbook = load_workbook(curriculum_file, read_only=True, data_only=True)
     sheet_specialties = [specialty for specialty in workbook.sheetnames if re.match(r"\b\d+\b", specialty)]
 
     errors: list = []
@@ -99,7 +110,7 @@ def processing_of_spreadsheet(path_to_file: str) -> list:
             header_block, table_block, footer_block = get_subblocks_from_block(worksheet, block, index)
 
             try:
-                block_df = get_data_frame_from_cell_range(path_to_file, sheet, table_block)
+                block_df = get_data_frame_from_cell_range(curriculum_file, sheet, table_block)
                 table_df = get_table_data_frame_from_block(block_df).dropna(axis=1, how="all")
                 table_df = pd.DataFrame(table_df.values[1:], columns=table_df.iloc[0])
                 table_df = table_df.loc[:, table_df.columns.notna()]
@@ -125,7 +136,6 @@ def processing_of_spreadsheet(path_to_file: str) -> list:
 
     workbook.close()
 
-    filename = os.path.basename(path_to_file)
-    logger.success(f"Spreadsheet '{filename}' parsed successfully")
+    logger.success(f"Spreadsheet '{curriculum_name}' parsed successfully")
 
     return spreadsheet_result_data, errors

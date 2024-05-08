@@ -23,9 +23,11 @@ class EducationComponentService:
         education_component_dict = education_component.model_dump()
         async with uow:
             try:
-                education_component_id = await uow.education_components.add_one(data=education_component_dict)
+                education_component: EducationComponentSchema = await uow.education_components.add_one(
+                    data=education_component_dict
+                )
                 await uow.commit()
-                return str(education_component_id)
+                return str(education_component.id)
             except ConflictException:
                 raise EducationComponentConflictException()
 

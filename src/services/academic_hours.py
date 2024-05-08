@@ -23,9 +23,9 @@ class AcademicHoursService:
         academic_hours_dict = academic_hours.model_dump()
         async with uow:
             try:
-                academic_hours_id = await uow.academic_hours.add_one(data=academic_hours_dict)
+                academic_hours: AcademicHoursSchema = await uow.academic_hours.add_one(data=academic_hours_dict)
                 await uow.commit()
-                return str(academic_hours_id)
+                return str(academic_hours.id)
             except ConflictException:
                 raise AcademicHoursConflictException()
 

@@ -31,7 +31,7 @@ class AcademicTaskModel(LoadDistributionBase, IdMixin, TimestampMixin):
             modular_control_works=self.modular_control_works,
             essays=self.essays,
             calculation_graphic_works=self.calculation_graphic_works,
-            semester_id=self.semester_id,
+            semester_id=str(self.semester_id),
             created_at=self.created_at,
             updated_at=self.updated_at
         )

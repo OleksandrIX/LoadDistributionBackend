@@ -34,7 +34,7 @@ class AcademicHoursModel(LoadDistributionBase, IdMixin, TimestampMixin):
             group_hours=self.group_hours,
             practical_hours=self.practical_hours,
             self_study_hours=self.self_study_hours,
-            semester_id=self.semester_id,
+            semester_id=str(self.semester_id),
             created_at=self.created_at,
             updated_at=self.updated_at
         )

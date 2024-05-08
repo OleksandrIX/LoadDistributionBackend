@@ -18,5 +18,5 @@ class ParsingException(Exception):
         if self.sheet_name is not None:
             error_str += f". Аркуш: {self.sheet_name}"
         if self.row is not None and self.column is not None:
-            error_str += f". Рядок: {self.row}, Колонка: {self.column}"
+            error_str += f". Рядок: {self.row}, Граф: {self.column}"
         return error_str

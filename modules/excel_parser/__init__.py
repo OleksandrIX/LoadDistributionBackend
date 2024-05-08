@@ -1,2 +1,0 @@
-from modules.excel_parser.read_spreadsheet import processing_of_spreadsheet
-from modules.excel_parser.save_spreadsheet_data import processing_spreadsheet_data

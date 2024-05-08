@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Enum, String, Numeric, SmallInteger, UUID, ForeignKey, UniqueConstraint, CheckConstraint
 from sqlalchemy.orm import relationship
 
-from .many_to_many_tables import education_components_study_groups
 from ..schemas import EducationComponentSchema
 from ..utils.database import LoadDistributionBase
 from ..utils.model import IdMixin, TimestampMixin
@@ -12,7 +11,7 @@ class EducationComponentModel(LoadDistributionBase, IdMixin, TimestampMixin):
 
     education_component_name = Column(String(255), nullable=False)
     education_component_code = Column(String(30), nullable=False)
-    education_degree = Column(Enum("bachelor", "master",
+    education_degree = Column(Enum("бакалавр", "магістр",
                                    name="education_degree_enum",
                                    schema="load_distribution"), nullable=False)
     credits = Column(Numeric(5, 2), nullable=False)
@@ -25,11 +24,6 @@ class EducationComponentModel(LoadDistributionBase, IdMixin, TimestampMixin):
     specialization = relationship("SpecializationModel", back_populates="education_components")
 
     semesters = relationship("SemesterModel", back_populates="education_component")
-
-    study_groups = relationship("StudyGroupModel",
-                                education_components_study_groups,
-                                back_populates="education_components",
-                                lazy="selectin")
 
     __table_args__ = (
         UniqueConstraint("education_component_code", "education_degree", name="ec_unique_combination"),

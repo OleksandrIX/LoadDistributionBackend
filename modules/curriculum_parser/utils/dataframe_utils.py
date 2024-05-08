@@ -1,9 +1,11 @@
+import io
 import pandas as pd
-from modules.excel_parser.utils.spreadsheet_utils import *
-from modules.excel_parser.exceptions.ParsingException import ParsingException
+
+from .spreadsheet_utils import get_indexes_from_cell_range
+from ..exceptions import ParsingException
 
 
-def get_data_frame_from_cell_range(file: str, sheet_name: str, cell_range: str) -> pd.DataFrame:
+def get_data_frame_from_cell_range(file: io.FileIO, sheet_name: str, cell_range: str) -> pd.DataFrame:
     """Get data frame from Excel sheet with given sheet name and cell range."""
     column_start, row_start, column_end, row_end = get_indexes_from_cell_range(cell_range)
 
