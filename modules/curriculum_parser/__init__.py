@@ -1,1 +1,1 @@
-from modules.excel_parser.read_spreadsheet import processing_of_curriculum
+from .read_spreadsheet import processing_of_curriculum
