@@ -30,3 +30,4 @@ from .academic_task import (AcademicTaskSchema,
                             AcademicTaskCreateSchema,
                             AcademicTaskUpdateSchema)
 from .education_components_study_groups import EducationComponentsStudyGroupsSchema
+from .user import UserSchema, UserRegistrationSchema, UserLoginSchema, TokenSchema, TokenPayload
