@@ -1,5 +1,7 @@
 from loguru import logger
 from fastapi import APIRouter
+from fastapi_pagination import paginate
+from fastapi_pagination.links import Page
 
 from ..services import AcademicHoursService
 from ..schemas import AcademicHoursSchema, AcademicHoursCreateSchema, AcademicHoursUpdateSchema
@@ -11,9 +13,9 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=list[AcademicHoursSchema], status_code=200)
-async def get_academic_hours(uow: UOWDependencies) -> list[AcademicHoursSchema]:
-    return await AcademicHoursService.get_academic_hours(uow)
+@router.get("", response_model=Page[AcademicHoursSchema], status_code=200)
+async def get_academic_hours(uow: UOWDependencies) -> Page[AcademicHoursSchema]:
+    return paginate(await AcademicHoursService.get_academic_hours(uow))
 
 
 @router.get("/{academic_hours_id}", response_model=AcademicHoursSchema, status_code=200)
