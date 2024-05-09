@@ -1,5 +1,7 @@
 from loguru import logger
 from fastapi import APIRouter
+from fastapi_pagination import paginate
+from fastapi_pagination.links import Page
 
 from ..services import SemesterService
 from ..schemas import SemesterSchema, SemesterCreateSchema, SemesterUpdateSchema
@@ -11,9 +13,9 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=list[SemesterSchema], status_code=200)
-async def get_semesters(uow: UOWDependencies) -> list[SemesterSchema]:
-    return await SemesterService.get_semesters(uow)
+@router.get("", response_model=Page[SemesterSchema], status_code=200)
+async def get_semesters(uow: UOWDependencies) -> Page[SemesterSchema]:
+    return paginate(await SemesterService.get_semesters(uow))
 
 
 @router.get("/{semester_id}", response_model=SemesterSchema, status_code=200)
