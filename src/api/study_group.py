@@ -1,5 +1,7 @@
 from loguru import logger
 from fastapi import APIRouter
+from fastapi_pagination import paginate
+from fastapi_pagination.links import Page
 
 from ..services import StudyGroupService
 from ..schemas import StudyGroupSchema, StudyGroupCreateSchema, StudyGroupUpdateSchema
@@ -11,9 +13,9 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=list[StudyGroupSchema], status_code=200)
-async def get_study_groups(uow: UOWDependencies) -> list[StudyGroupSchema]:
-    return await StudyGroupService.get_study_groups(uow)
+@router.get("", response_model=Page[StudyGroupSchema], status_code=200)
+async def get_study_groups(uow: UOWDependencies) -> Page[StudyGroupSchema]:
+    return paginate(await StudyGroupService.get_study_groups(uow))
 
 
 @router.get("/{study_group_id}", response_model=StudyGroupSchema, status_code=200)

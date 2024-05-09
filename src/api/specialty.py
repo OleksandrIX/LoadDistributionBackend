@@ -1,5 +1,7 @@
 from loguru import logger
 from fastapi import APIRouter
+from fastapi_pagination import paginate
+from fastapi_pagination.links import Page
 
 from ..services import SpecialtyService
 from ..schemas import SpecialtySchema, SpecialtyCreateSchema, SpecialtyUpdateSchema
@@ -11,9 +13,9 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=list[SpecialtySchema], status_code=200)
-async def get_specialties(uow: UOWDependencies) -> list[SpecialtySchema]:
-    return await SpecialtyService.get_specialties(uow)
+@router.get("", response_model=Page[SpecialtySchema], status_code=200)
+async def get_specialties(uow: UOWDependencies) -> Page[SpecialtySchema]:
+    return paginate(await SpecialtyService.get_specialties(uow))
 
 
 @router.get("/{specialty_id}", response_model=SpecialtySchema, status_code=200)

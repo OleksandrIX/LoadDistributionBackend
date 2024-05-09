@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi_pagination import add_pagination
+from fastapi_pagination.utils import disable_installed_extensions_check
 
 from .config import CustomizeLogger
 from .api import all_routers
@@ -13,9 +15,12 @@ def create_app() -> FastAPI:
     )
     app.logger = CustomizeLogger.make_logger()
 
+    add_pagination(app)
     app.add_middleware(ExceptionHandlerMiddleware)
 
     for router in all_routers:
         app.include_router(router)
+
+    disable_installed_extensions_check()
 
     return app

@@ -1,6 +1,8 @@
 from loguru import logger
 from typing import Annotated
 from fastapi import APIRouter, Depends, UploadFile, File
+from fastapi_pagination import paginate
+from fastapi_pagination.links import Page
 
 from ..services import CurriculumService
 from ..schemas import (CurriculumFileSchema,
@@ -16,12 +18,11 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=list[CurriculumFileSchema], status_code=200)
+@router.get("", response_model=Page[CurriculumFileSchema], status_code=200)
 async def get_curriculums(
         curriculum_service: Annotated[CurriculumService, Depends(CurriculumService)]
-) -> list[CurriculumFileSchema]:
-    curriculums = await curriculum_service.get_curriculum_files()
-    return curriculums
+) -> Page[CurriculumFileSchema]:
+    return paginate(await curriculum_service.get_curriculum_files())
 
 
 @router.post("/upload", response_model=CurriculumFileSchema, status_code=201)

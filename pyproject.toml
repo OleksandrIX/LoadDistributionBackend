@@ -19,6 +19,7 @@ fastapi = "0.110.2" # For API
 uvicorn = "0.29.0" # For started FastAPI
 python-multipart = "0.0.9" # For upload file
 minio = "7.2.7" # For storage service
+fastapi-pagination = "^0.12.24" # For pagination
 
 
 [build-system]
