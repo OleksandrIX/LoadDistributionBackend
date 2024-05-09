@@ -71,7 +71,18 @@ class MinIOSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file="./environments/.env.minio")
 
 
+class SecuritySettings(BaseSettings):
+    ACCESS_TOKEN_EXPIRE: int
+    REFRESH_TOKEN_EXPIRE: int
+    ALGORITHM: str
+    JWT_SECRET_KEY: str
+    JWT_REFRESH_SECRET_KEY: str
+
+    model_config = SettingsConfigDict(env_file="./environments/.env.security")
+
+
 application_settings = ApplicationSettings()
 logger_settings = LoggerSettings()
 database_settings = DatabaseSettings()
 minio_settings = MinIOSettings()
+security_settings = SecuritySettings()
