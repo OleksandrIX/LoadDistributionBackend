@@ -1,5 +1,7 @@
 from loguru import logger
 from fastapi import APIRouter
+from fastapi_pagination import paginate
+from fastapi_pagination.links import Page
 
 from ..services import DepartmentService
 from ..schemas import DepartmentSchema, DepartmentCreateSchema, DepartmentUpdateSchema
@@ -11,9 +13,9 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=list[DepartmentSchema], status_code=200)
-async def get_departments(uow: UOWDependencies) -> list[DepartmentSchema]:
-    return await DepartmentService.get_departments(uow)
+@router.get("", response_model=Page[DepartmentSchema], status_code=200)
+async def get_departments(uow: UOWDependencies) -> Page[DepartmentSchema]:
+    return paginate(await DepartmentService.get_departments(uow))
 
 
 @router.get("/{department_id}", response_model=DepartmentSchema, status_code=200)
