@@ -7,3 +7,4 @@ from .semester import SemesterService
 from .academic_hours import AcademicHoursService
 from .academic_task import AcademicTaskService
 from .curriculum import CurriculumService
+from .user import UserService
