@@ -1,5 +1,7 @@
 from loguru import logger
 from fastapi import APIRouter
+from fastapi_pagination import paginate
+from fastapi_pagination.links import Page
 
 from ..services import AcademicTaskService
 from ..schemas import AcademicTaskSchema, AcademicTaskCreateSchema, AcademicTaskUpdateSchema
@@ -11,9 +13,9 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=list[AcademicTaskSchema], status_code=200)
-async def get_academic_tasks(uow: UOWDependencies) -> list[AcademicTaskSchema]:
-    return await AcademicTaskService.get_academic_tasks(uow)
+@router.get("", response_model=Page[AcademicTaskSchema], status_code=200)
+async def get_academic_tasks(uow: UOWDependencies) -> Page[AcademicTaskSchema]:
+    return paginate(await AcademicTaskService.get_academic_tasks(uow))
 
 
 @router.get("/{academic_task_id}", response_model=AcademicTaskSchema, status_code=200)
