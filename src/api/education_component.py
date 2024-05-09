@@ -1,5 +1,7 @@
 from loguru import logger
 from fastapi import APIRouter
+from fastapi_pagination import paginate
+from fastapi_pagination.links import Page
 
 from ..services import EducationComponentService
 from ..schemas import EducationComponentSchema, EducationComponentCreateSchema, EducationComponentUpdateSchema
@@ -11,9 +13,9 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=list[EducationComponentSchema], status_code=200)
-async def get_education_components(uow: UOWDependencies) -> list[EducationComponentSchema]:
-    return await EducationComponentService.get_education_components(uow)
+@router.get("", response_model=Page[EducationComponentSchema], status_code=200)
+async def get_education_components(uow: UOWDependencies) -> Page[EducationComponentSchema]:
+    return paginate(await EducationComponentService.get_education_components(uow))
 
 
 @router.get("/{education_component_id}", response_model=EducationComponentSchema, status_code=200)
