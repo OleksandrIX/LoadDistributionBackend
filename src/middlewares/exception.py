@@ -3,14 +3,14 @@ from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from ..exceptions import NotFoundException, ConflictException
+from ..exceptions import UnauthorizedException, ForbiddenException, NotFoundException, ConflictException
 
 
 class ExceptionHandlerMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         try:
             return await call_next(request)
-        except (NotFoundException, ConflictException) as client_exception:
+        except (UnauthorizedException, ForbiddenException, NotFoundException, ConflictException) as client_exception:
             logger.warning(client_exception.massage)
             return JSONResponse(
                 status_code=client_exception.status_code,
