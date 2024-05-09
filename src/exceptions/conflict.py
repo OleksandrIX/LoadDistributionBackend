@@ -42,3 +42,8 @@ class AcademicHoursConflictException(ConflictException):
 class AcademicTaskConflictException(ConflictException):
     def __init__(self):
         super().__init__(massage="Academic task with such data already exists")
+
+
+class UserConflictException(ConflictException):
+    def __init__(self, message=None):
+        super().__init__(massage=message or "User with such data already exists")

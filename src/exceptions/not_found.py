@@ -56,3 +56,9 @@ class CurriculumNotFoundException(NotFoundException):
     def __init__(self, curriculum_filename):
         massage = f"Curriculum file with name '{curriculum_filename}' not found"
         super().__init__(massage=massage)
+
+
+class UserNotFoundException(NotFoundException):
+    def __init__(self, username):
+        massage = f"User with username '{username}' not found"
+        super().__init__(massage=massage)
