@@ -8,7 +8,7 @@ from ..schemas import SpecialtySchema, SpecialtyCreateSchema, SpecialtyUpdateSch
 from ..utils.dependencies import UOWDependencies
 
 router = APIRouter(
-    prefix="/api/v1/specialties",
+    prefix="/routes/v1/specialties",
     tags=["Specialty"],
 )
 
