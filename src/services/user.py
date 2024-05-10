@@ -1,5 +1,5 @@
 from ..schemas import UserSchema, UserRegistrationSchema
-from ..exceptions import UserNotFoundException, UserConflictException
+from ..exceptions import UserByUsernameNotFoundException, UserByIdNotFoundException, UserConflictException
 from ..exceptions import ConflictException
 from ..utils.security import get_hashed_password
 from ..utils.unit_of_work import IUnitOfWork
@@ -7,11 +7,19 @@ from ..utils.unit_of_work import IUnitOfWork
 
 class UserService:
     @staticmethod
+    async def get_user_by_id(uow: IUnitOfWork, user_id: str) -> UserSchema:
+        async with uow:
+            user = await uow.users.get_one(id=user_id)
+            if not user:
+                raise UserByIdNotFoundException(user_id)
+            return user
+
+    @staticmethod
     async def get_user_by_username(uow: IUnitOfWork, username: str) -> UserSchema:
         async with uow:
             user = await uow.users.get_one(username=username)
             if not user:
-                raise UserNotFoundException(username)
+                raise UserByUsernameNotFoundException(username)
             return user
 
     @staticmethod
