@@ -1,11 +1,18 @@
 # Custom ignore file for Python projects
-.idea
-.vscode
+.idea/
+.vscode/
+
 .env
 .env.*
+
+logs/
 logs/**/*
+
+example/
 example/data/**/*
 example/**/*
+
+ssl/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

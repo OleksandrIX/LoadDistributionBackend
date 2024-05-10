@@ -3,7 +3,7 @@ from fastapi_pagination import add_pagination
 from fastapi_pagination.utils import disable_installed_extensions_check
 
 from .config import CustomizeLogger
-from .api import all_routers
+from .routes import all_routers
 from .middlewares import ExceptionHandlerMiddleware
 
 

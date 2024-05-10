@@ -7,3 +7,4 @@ from .semester import SemesterRepository
 from .academic_hours import AcademicHoursRepository
 from .academic_task import AcademicTaskRepository
 from .education_components_study_groups import EducationComponentsStudyGroupsRepository
+from .user import UserRepository
