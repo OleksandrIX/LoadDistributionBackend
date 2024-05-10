@@ -58,7 +58,13 @@ class CurriculumNotFoundException(NotFoundException):
         super().__init__(massage=massage)
 
 
-class UserNotFoundException(NotFoundException):
+class UserByUsernameNotFoundException(NotFoundException):
     def __init__(self, username):
         massage = f"User with username '{username}' not found"
+        super().__init__(massage=massage)
+
+
+class UserByIdNotFoundException(NotFoundException):
+    def __init__(self, user_id):
+        massage = f"User with id '{user_id}' not found"
         super().__init__(massage=massage)

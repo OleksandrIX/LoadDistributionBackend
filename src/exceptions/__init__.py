@@ -9,7 +9,8 @@ from .not_found import (NotFoundException,
                         AcademicHoursNotFoundException,
                         AcademicTaskNotFoundException,
                         CurriculumNotFoundException,
-                        UserNotFoundException)
+                        UserByUsernameNotFoundException,
+                        UserByIdNotFoundException)
 from .conflict import (ConflictException,
                        DepartmentConflictException,
                        SpecialtyConflictException,
