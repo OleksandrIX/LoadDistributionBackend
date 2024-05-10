@@ -3,20 +3,21 @@ from fastapi_pagination import add_pagination
 from fastapi_pagination.utils import disable_installed_extensions_check
 
 from .config import CustomizeLogger
+from .middlewares import ExceptionHandlerMiddleware, CorsMiddleware
 from .routes import all_routers
-from .middlewares import ExceptionHandlerMiddleware
 
 
 def create_app() -> FastAPI:
     app = FastAPI(
         title="Load distribution API",
-        version="0.1.0",
+        version="0.3.1",
         docs_url="/api/v1/docs"
     )
     app.logger = CustomizeLogger.make_logger()
 
     add_pagination(app)
     app.add_middleware(ExceptionHandlerMiddleware)
+    app.add_middleware(CorsMiddleware)
 
     for router in all_routers:
         app.include_router(router)

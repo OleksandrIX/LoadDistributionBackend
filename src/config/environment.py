@@ -81,8 +81,30 @@ class SecuritySettings(BaseSettings):
     model_config = SettingsConfigDict(env_file="./environments/.env.security")
 
 
+class CorsSettings(BaseSettings):
+    CORS_ALLOW_ORIGINS: str
+    CORS_ALLOW_METHODS: str
+    CORS_ALLOW_HEADERS: str
+    CORS_ALLOW_CREDENTIALS: bool
+
+    @property
+    def allow_origins(self):
+        return [origin.strip() for origin in self.CORS_ALLOW_ORIGINS.split(",") if origin.strip()]
+
+    @property
+    def allow_methods(self):
+        return [method.strip() for method in self.CORS_ALLOW_METHODS.split(",") if method.strip()]
+
+    @property
+    def allow_headers(self):
+        return [header.strip() for header in self.CORS_ALLOW_HEADERS.split(",") if header.strip()]
+
+    model_config = SettingsConfigDict(env_file="./environments/.env.cors")
+
+
 application_settings = ApplicationSettings()
 logger_settings = LoggerSettings()
 database_settings = DatabaseSettings()
 minio_settings = MinIOSettings()
 security_settings = SecuritySettings()
+cors_settings = CorsSettings()
