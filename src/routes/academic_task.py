@@ -8,7 +8,7 @@ from ..schemas import AcademicTaskSchema, AcademicTaskCreateSchema, AcademicTask
 from ..utils.dependencies import UOWDependencies
 
 router = APIRouter(
-    prefix="/routes/v1/academic-tasks",
+    prefix="/api/v1/academic-tasks",
     tags=["Academic task"]
 )
 

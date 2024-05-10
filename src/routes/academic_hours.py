@@ -8,7 +8,7 @@ from ..schemas import AcademicHoursSchema, AcademicHoursCreateSchema, AcademicHo
 from ..utils.dependencies import UOWDependencies
 
 router = APIRouter(
-    prefix="/routes/v1/academic-hours",
+    prefix="/api/v1/academic-hours",
     tags=["Academic hours"],
 )
 

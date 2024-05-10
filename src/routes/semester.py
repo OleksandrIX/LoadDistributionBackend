@@ -8,7 +8,7 @@ from ..schemas import SemesterSchema, SemesterCreateSchema, SemesterUpdateSchema
 from ..utils.dependencies import UOWDependencies
 
 router = APIRouter(
-    prefix="/routes/v1/semesters",
+    prefix="/api/v1/semesters",
     tags=["Semester"],
 )
 

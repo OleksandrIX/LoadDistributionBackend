@@ -8,7 +8,7 @@ from ..schemas import DepartmentSchema, DepartmentCreateSchema, DepartmentUpdate
 from ..utils.dependencies import UOWDependencies
 
 router = APIRouter(
-    prefix="/routes/v1/departments",
+    prefix="/api/v1/departments",
     tags=["Department"]
 )
 

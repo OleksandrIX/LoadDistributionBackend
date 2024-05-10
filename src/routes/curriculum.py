@@ -13,7 +13,7 @@ from ..schemas import (CurriculumFileSchema,
 from ..utils.dependencies import UOWDependencies
 
 router = APIRouter(
-    prefix="/routes/v1/curriculums",
+    prefix="/api/v1/curriculums",
     tags=["Curriculum"]
 )
 

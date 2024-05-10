@@ -8,7 +8,7 @@ from ..schemas import EducationComponentSchema, EducationComponentCreateSchema, 
 from ..utils.dependencies import UOWDependencies
 
 router = APIRouter(
-    prefix="/routes/v1/education-components",
+    prefix="/api/v1/education-components",
     tags=["Education Component"],
 )
 

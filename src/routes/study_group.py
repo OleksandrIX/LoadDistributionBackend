@@ -8,7 +8,7 @@ from ..schemas import StudyGroupSchema, StudyGroupCreateSchema, StudyGroupUpdate
 from ..utils.dependencies import UOWDependencies
 
 router = APIRouter(
-    prefix="/routes/v1/study-groups",
+    prefix="/api/v1/study-groups",
     tags=["Study group"],
 )
 
