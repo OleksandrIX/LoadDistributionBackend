@@ -14,6 +14,14 @@ class UserRegistrationSchema(BaseModel):
     password: str = Field(..., min_length=8, max_length=32)
 
 
-class UserSchema(TimestampMixinSchema, IdMixinSchema):
+class UserBase(BaseModel):
     username: str
     email: EmailStr
+
+
+class UserSchema(TimestampMixinSchema, IdMixinSchema, UserBase):
+    password: str
+
+
+class UserWithoutPasswordSchema(TimestampMixinSchema, IdMixinSchema, UserBase):
+    ...
