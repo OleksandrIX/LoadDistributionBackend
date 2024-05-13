@@ -21,7 +21,12 @@ async def registration_user(uow: UOWDependencies, user: UserRegistrationSchema) 
     return user
 
 
-@router.post("/login", response_model=TokenSchema, status_code=200)
+@router.post(
+    path="/login",
+    status_code=200,
+    response_model=TokenSchema,
+    response_description="If the request is successful, refresh_token and logged_in are created in the cookie"
+)
 async def login(response: Response, uow: UOWDependencies, login_user: UserLoginSchema) -> TokenSchema:
     user: UserSchema = await UserService.get_user_by_username(uow, login_user.username)
     if not verify_password(login_user.password, user.password):
@@ -53,7 +58,11 @@ async def refresh_token(request: Request, response: Response, uow: UOWDependenci
     return TokenSchema(access_token=access_token)
 
 
-@router.delete("/logout", status_code=204)
+@router.delete(
+    path="/logout",
+    status_code=204,
+    response_description="If the request is successful, refresh_token and logged_in are deleted from the cookie"
+)
 async def logout(response: Response):
     response.delete_cookie("logged_in")
     response.delete_cookie("refresh_token")
