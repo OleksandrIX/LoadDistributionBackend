@@ -84,8 +84,7 @@ class JWTBearer(HTTPBearer):
     def __init__(self):
         super(JWTBearer, self).__init__(auto_error=False)
 
-    async def __call__(self, request: Request):
-        logger.debug(request.cookies)
+    async def __call__(self, request: Request) -> str:
         credentials: HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
         if not credentials:
             raise UnauthorizedException(massage="Authorization token not found.")

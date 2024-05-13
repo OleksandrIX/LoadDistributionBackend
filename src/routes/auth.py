@@ -3,7 +3,12 @@ from fastapi import Request, Response
 from loguru import logger
 
 from ..config import security_settings
-from ..schemas import UserSchema, UserLoginSchema, UserRegistrationSchema, TokenSchema, TokenPayloadSchema
+from ..schemas import (UserSchema,
+                       UserWithoutPasswordSchema,
+                       UserLoginSchema,
+                       UserRegistrationSchema,
+                       TokenSchema,
+                       TokenPayloadSchema)
 from ..services import UserService
 from ..utils.dependencies import UOWDependencies
 from ..utils.security import verify_password, create_token, verify_token
@@ -14,11 +19,11 @@ router = APIRouter(
 )
 
 
-@router.post("/registration", status_code=201)
-async def registration_user(uow: UOWDependencies, user: UserRegistrationSchema) -> UserSchema:
+@router.post("/registration", response_model=UserWithoutPasswordSchema, status_code=201)
+async def registration_user(uow: UOWDependencies, user: UserRegistrationSchema) -> UserWithoutPasswordSchema:
     user: UserSchema = await UserService.create_user(uow, user)
-    logger.success(f"Created user with username: {user.username} and id: {user.id}")
-    return user
+    logger.success(f"Created user with id '{user.id}'")
+    return UserWithoutPasswordSchema(**user.model_dump())
 
 
 @router.post(
