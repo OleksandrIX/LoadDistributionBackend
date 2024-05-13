@@ -17,4 +17,3 @@ class UserRegistrationSchema(BaseModel):
 class UserSchema(TimestampMixinSchema, IdMixinSchema):
     username: str
     email: EmailStr
-    password: str

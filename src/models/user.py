@@ -16,7 +16,6 @@ class UserModel(LoadDistributionBase, IdMixin, TimestampMixin):
         return UserSchema(
             id=self.id,
             username=self.username,
-            password=self.password,
             email=self.email,
             created_at=self.created_at,
             updated_at=self.updated_at
