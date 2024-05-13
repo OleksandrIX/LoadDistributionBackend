@@ -25,7 +25,7 @@ async def registration_user(uow: UOWDependencies, user: UserRegistrationSchema) 
     path="/login",
     status_code=200,
     response_model=TokenSchema,
-    response_description="If the request is successful, refresh_token and logged_in are created in the cookie"
+    response_description="Created in the cookies refresh_token and logged_in"
 )
 async def login(response: Response, uow: UOWDependencies, login_user: UserLoginSchema) -> TokenSchema:
     user: UserSchema = await UserService.get_user_by_username(uow, login_user.username)
@@ -45,7 +45,12 @@ async def login(response: Response, uow: UOWDependencies, login_user: UserLoginS
     return TokenSchema(access_token=access_token)
 
 
-@router.post("/refresh", response_model=TokenSchema, status_code=200)
+@router.post(
+    "/refresh",
+    status_code=200,
+    response_model=TokenSchema,
+    response_description="Updated in the cookies logged_in and return access token"
+)
 async def refresh_token(request: Request, response: Response, uow: UOWDependencies) -> TokenSchema:
     refresh_token = request.cookies.get("refresh_token")
     token_payload: TokenPayloadSchema = verify_token(refresh_token, "refresh")
@@ -61,7 +66,7 @@ async def refresh_token(request: Request, response: Response, uow: UOWDependenci
 @router.delete(
     path="/logout",
     status_code=204,
-    response_description="If the request is successful, refresh_token and logged_in are deleted from the cookie"
+    response_description="Deleted from the cookies refresh_token and logged_in"
 )
 async def logout(response: Response):
     response.delete_cookie("logged_in")
