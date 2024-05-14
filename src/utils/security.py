@@ -35,7 +35,7 @@ def encode_token(subject: str, type_token: str) -> str:
                           key=security_settings.JWT_REFRESH_SECRET_KEY,
                           algorithm=security_settings.ALGORITHM)
     else:
-        raise UnauthorizedException(massage="Invalid type token.")
+        raise UnauthorizedException(message="Invalid type token.")
 
 
 def decode_token(token: str, type_token: str, options: dict) -> dict:
@@ -50,7 +50,7 @@ def decode_token(token: str, type_token: str, options: dict) -> dict:
                           algorithms=security_settings.ALGORITHM,
                           options=options)
     else:
-        raise UnauthorizedException(massage="Invalid type token.")
+        raise UnauthorizedException(message="Invalid type token.")
 
 
 def create_token(subject: str, type_token: str) -> str:
@@ -74,10 +74,10 @@ def verify_token(token: str, type_token: str) -> TokenPayloadSchema:
         payload = decode_token(token, type_token, options={"verify_exp": False})
         token_payload = TokenPayloadSchema(**payload)
         if datetime.fromtimestamp(token_payload.exp) < datetime.now():
-            raise UnauthorizedException(massage="Authorization token expired.")
+            raise UnauthorizedException(message="Authorization token expired.")
         return token_payload
     except JWTError as err:
-        raise UnauthorizedException(massage=str(err))
+        raise UnauthorizedException(message=str(err))
 
 
 class JWTBearer(HTTPBearer):
@@ -87,8 +87,8 @@ class JWTBearer(HTTPBearer):
     async def __call__(self, request: Request) -> str:
         credentials: HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
         if not credentials:
-            raise UnauthorizedException(massage="Authorization token not found.")
+            raise UnauthorizedException(message="Authorization token not found.")
         if credentials.scheme != "Bearer":
-            raise UnauthorizedException(massage="Invalid authentication scheme.")
+            raise UnauthorizedException(message="Invalid authentication scheme.")
         verify_token(credentials.credentials, type_token="access")
         return credentials.credentials

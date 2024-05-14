@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from fastapi import Request, Response
 from loguru import logger
 
 from ..config import security_settings
+from ..exceptions import ClientException, UnauthorizedException
 from ..schemas import (UserSchema,
                        UserWithoutPasswordSchema,
                        UserLoginSchema,
@@ -35,7 +36,7 @@ async def registration_user(uow: UOWDependencies, user: UserRegistrationSchema) 
 async def login(response: Response, uow: UOWDependencies, login_user: UserLoginSchema) -> TokenSchema:
     user: UserSchema = await UserService.get_user_by_username(uow, login_user.username)
     if not verify_password(login_user.password, user.password):
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
+        raise ClientException(status_code=400, message="Incorrect password")
     access_token = create_token(user.id, "access")
     refresh_token = create_token(user.id, "refresh")
     response.set_cookie("refresh_token", refresh_token,

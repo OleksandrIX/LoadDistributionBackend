@@ -1,10 +1,16 @@
+class ClientException(Exception):
+    def __init__(self, status_code: int = 400, message: str = "Bad request"):
+        self.status_code = status_code
+        self.message = message
+
+
 class UnauthorizedException(Exception):
-    def __init__(self, massage=None):
+    def __init__(self, message=None):
         self.status_code = 401
-        self.massage = massage or "Unauthorized"
+        self.message = message or "Unauthorized"
 
 
 class ForbiddenException(Exception):
-    def __init__(self, massage=None):
+    def __init__(self, message=None):
         self.status_code = 403
-        self.massage = massage or "Forbidden"
+        self.message = message or "Forbidden"
