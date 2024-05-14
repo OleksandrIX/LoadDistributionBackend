@@ -1,15 +1,16 @@
-from loguru import logger
 from fastapi import APIRouter
 from fastapi_pagination import paginate
 from fastapi_pagination.links import Page
+from loguru import logger
 
-from ..services import DepartmentService
 from ..schemas import DepartmentSchema, DepartmentCreateSchema, DepartmentUpdateSchema
-from ..utils.dependencies import UOWDependencies
+from ..services import DepartmentService
+from ..utils.dependencies import UOWDependencies, SecurityDependencies
 
 router = APIRouter(
     prefix="/api/v1/departments",
-    tags=["Department"]
+    tags=["Department"],
+    dependencies=[SecurityDependencies]
 )
 
 

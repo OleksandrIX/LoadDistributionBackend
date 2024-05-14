@@ -1,15 +1,16 @@
-from loguru import logger
 from fastapi import APIRouter
 from fastapi_pagination import paginate
 from fastapi_pagination.links import Page
+from loguru import logger
 
-from ..services import AcademicTaskService
 from ..schemas import AcademicTaskSchema, AcademicTaskCreateSchema, AcademicTaskUpdateSchema
-from ..utils.dependencies import UOWDependencies
+from ..services import AcademicTaskService
+from ..utils.dependencies import UOWDependencies, SecurityDependencies
 
 router = APIRouter(
     prefix="/api/v1/academic-tasks",
-    tags=["Academic task"]
+    tags=["Academic task"],
+    dependencies=[SecurityDependencies]
 )
 
 

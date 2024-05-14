@@ -5,11 +5,12 @@ from fastapi_pagination.links import Page
 
 from ..services import EducationComponentService
 from ..schemas import EducationComponentSchema, EducationComponentCreateSchema, EducationComponentUpdateSchema
-from ..utils.dependencies import UOWDependencies
+from ..utils.dependencies import UOWDependencies, SecurityDependencies
 
 router = APIRouter(
     prefix="/api/v1/education-components",
     tags=["Education Component"],
+    dependencies=[SecurityDependencies]
 )
 
 

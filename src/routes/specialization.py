@@ -1,15 +1,16 @@
-from loguru import logger
 from fastapi import APIRouter
 from fastapi_pagination import paginate
 from fastapi_pagination.links import Page
+from loguru import logger
 
-from ..services import SpecializationService
 from ..schemas import SpecializationSchema, SpecializationCreateSchema, SpecializationUpdateSchema
-from ..utils.dependencies import UOWDependencies
+from ..services import SpecializationService
+from ..utils.dependencies import UOWDependencies, SecurityDependencies
 
 router = APIRouter(
     prefix="/api/v1/specializations",
     tags=["Specialization"],
+    dependencies=[SecurityDependencies]
 )
 
 
