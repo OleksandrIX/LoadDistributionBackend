@@ -1,4 +1,4 @@
-from .exception import UnauthorizedException, ForbiddenException
+from .exception import ClientException, UnauthorizedException, ForbiddenException
 from .not_found import (NotFoundException,
                         DepartmentNotFoundException,
                         SpecialtyNotFoundException,

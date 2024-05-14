@@ -8,9 +8,11 @@ from .academic_hours import router as academic_hours_router
 from .academic_task import router as academic_task_router
 from .curriculum import router as curriculum_router
 from .auth import router as auth_router
+from .user import router as user_router
 
 all_routers = [
     auth_router,
+    user_router,
     department_router,
     specialty_router,
     specialization_router,
