@@ -1,15 +1,16 @@
-from loguru import logger
 from fastapi import APIRouter
 from fastapi_pagination import paginate
 from fastapi_pagination.links import Page
+from loguru import logger
 
-from ..services import AcademicHoursService
 from ..schemas import AcademicHoursSchema, AcademicHoursCreateSchema, AcademicHoursUpdateSchema
-from ..utils.dependencies import UOWDependencies
+from ..services import AcademicHoursService
+from ..utils.dependencies import UOWDependencies, SecurityDependencies
 
 router = APIRouter(
     prefix="/api/v1/academic-hours",
     tags=["Academic hours"],
+    dependencies=[SecurityDependencies]
 )
 
 

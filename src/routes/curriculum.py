@@ -1,20 +1,22 @@
-from loguru import logger
 from typing import Annotated
+
 from fastapi import APIRouter, Depends, UploadFile, File
 from fastapi_pagination import paginate
 from fastapi_pagination.links import Page
+from loguru import logger
 
-from ..services import CurriculumService
 from ..schemas import (CurriculumFileSchema,
                        ParsedCurriculumSchema,
                        CurriculumDataRequestSchema,
                        CurriculumDataSavedResponseSchema,
                        CurriculumSpreadsheetBlockRequestSchema)
-from ..utils.dependencies import UOWDependencies
+from ..services import CurriculumService
+from ..utils.dependencies import UOWDependencies, SecurityDependencies
 
 router = APIRouter(
     prefix="/api/v1/curriculums",
-    tags=["Curriculum"]
+    tags=["Curriculum"],
+    dependencies=[SecurityDependencies]
 )
 
 
