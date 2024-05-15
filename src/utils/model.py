@@ -14,6 +14,7 @@ class TimestampMixin:
     updated_at = Column(TIMESTAMP, nullable=False, server_default=func.now())
 
 
+role_enum_args = ["USER", "ADMIN"]
 academic_rank_enum_args = ["Старший науковий співробітник", "Доцент", "Професор"]
 education_degree_enum_agrs = ["бакалавр", "магістр"]
 reporting_type_enum_args = ["Диференційований залік", "Екзамен"]

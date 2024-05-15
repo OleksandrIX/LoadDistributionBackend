@@ -10,7 +10,7 @@ from .routes import all_routers
 def create_app() -> FastAPI:
     app = FastAPI(
         title="Load distribution API",
-        version="0.3.1",
+        version="0.3.4",
         docs_url="/api/v1/docs"
     )
     app.logger = CustomizeLogger.make_logger()

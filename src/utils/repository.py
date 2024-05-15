@@ -29,7 +29,7 @@ class AbstractRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def delete_one(self, id: str):
+    async def delete_one(self, **filter_by):
         raise NotImplementedError
 
 

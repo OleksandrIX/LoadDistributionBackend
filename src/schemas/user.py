@@ -1,6 +1,7 @@
+from typing import Optional
 from pydantic import BaseModel, Field, EmailStr
 
-from ..utils.schema import IdMixinSchema, TimestampMixinSchema
+from ..utils.schema import IdMixinSchema, TimestampMixinSchema, RoleEnum
 
 
 class UserLoginSchema(BaseModel):
@@ -15,8 +16,10 @@ class UserRegistrationSchema(BaseModel):
 
 
 class UserBase(BaseModel):
-    username: str
+    username: str = Field(..., max_length=30)
     email: EmailStr
+    role: RoleEnum
+    department_id: Optional[str]
 
 
 class UserSchema(TimestampMixinSchema, IdMixinSchema, UserBase):

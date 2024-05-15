@@ -13,6 +13,11 @@ class TimestampMixinSchema(BaseModel):
     updated_at: datetime
 
 
+class RoleEnum(str, Enum):
+    user = "USER"
+    admin = "ADMIN"
+
+
 class EducationDegreeEnum(str, Enum):
     bachelor = "бакалавр"
     master = "магістр"
