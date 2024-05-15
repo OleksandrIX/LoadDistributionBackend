@@ -1,9 +1,10 @@
-from typing import Type
 from abc import ABC, abstractmethod
+from typing import Type
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..repositories import *
 from .database import async_session_maker
+from ..repositories import *
 
 
 class IUnitOfWork(ABC):
@@ -17,6 +18,7 @@ class IUnitOfWork(ABC):
     academic_tasks: Type[AcademicTaskRepository]
     education_components_study_groups: Type[EducationComponentsStudyGroupsRepository]
     users: Type[UserRepository]
+    teachers: Type[TeacherRepository]
 
     @abstractmethod
     def __init__(self):
@@ -57,6 +59,7 @@ class UnitOfWork:
         self.academic_tasks = AcademicTaskRepository(self.session)
         self.education_components_study_groups = EducationComponentsStudyGroupsRepository(self.session)
         self.users = UserRepository(self.session)
+        self.teachers = TeacherRepository(self.session)
 
     async def __aexit__(self, *args):
         await self.rollback()
