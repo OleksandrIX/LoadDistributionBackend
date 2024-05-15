@@ -2,7 +2,7 @@ from sqlalchemy import Column, Enum, String, SmallInteger, UniqueConstraint, Che
 
 from ..schemas import StudyGroupSchema
 from ..utils.database import LoadDistributionBase
-from ..utils.model import IdMixin, TimestampMixin
+from ..utils.model import IdMixin, TimestampMixin, education_degree_enum_agrs
 
 
 class StudyGroupModel(LoadDistributionBase, IdMixin, TimestampMixin):
@@ -10,7 +10,7 @@ class StudyGroupModel(LoadDistributionBase, IdMixin, TimestampMixin):
 
     group_code = Column(String(10), nullable=False)
     course_study = Column(SmallInteger, nullable=False)
-    education_degree = Column(Enum("бакалавр", "магістр",
+    education_degree = Column(Enum(*education_degree_enum_agrs,
                                    name="education_degree_enum",
                                    schema="load_distribution"), nullable=False)
     number_listeners = Column(SmallInteger, nullable=False)

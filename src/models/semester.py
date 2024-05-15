@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 
 from ..schemas import SemesterSchema
 from ..utils.database import LoadDistributionBase
-from ..utils.model import IdMixin, TimestampMixin
+from ..utils.model import IdMixin, TimestampMixin, reporting_type_enum_args
 
 
 class SemesterModel(LoadDistributionBase, IdMixin, TimestampMixin):
@@ -11,7 +11,7 @@ class SemesterModel(LoadDistributionBase, IdMixin, TimestampMixin):
 
     semester_number = Column(SmallInteger, nullable=False)
     total_amount_hours = Column(SmallInteger, nullable=False)
-    reporting_type = Column(Enum("Диференційований залік", "Екзамен",
+    reporting_type = Column(Enum(*reporting_type_enum_args,
                                  name="reporting_type_enum",
                                  schema="load_distribution"), nullable=False)
     education_component_id = Column(UUID(as_uuid=True), ForeignKey("education_components.id"), nullable=False)

@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 
 from ..schemas import EducationComponentSchema
 from ..utils.database import LoadDistributionBase
-from ..utils.model import IdMixin, TimestampMixin
+from ..utils.model import IdMixin, TimestampMixin, education_degree_enum_agrs
 
 
 class EducationComponentModel(LoadDistributionBase, IdMixin, TimestampMixin):
@@ -11,7 +11,7 @@ class EducationComponentModel(LoadDistributionBase, IdMixin, TimestampMixin):
 
     education_component_name = Column(String(255), nullable=False)
     education_component_code = Column(String(30), nullable=False)
-    education_degree = Column(Enum("бакалавр", "магістр",
+    education_degree = Column(Enum(*education_degree_enum_agrs,
                                    name="education_degree_enum",
                                    schema="load_distribution"), nullable=False)
     credits = Column(Numeric(5, 2), nullable=False)
