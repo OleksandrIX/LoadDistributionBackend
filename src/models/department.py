@@ -14,6 +14,7 @@ class DepartmentModel(LoadDistributionBase, IdMixin, TimestampMixin):
 
     specialties = relationship("SpecialtyModel", back_populates="department")
     education_components = relationship("EducationComponentModel", back_populates="department")
+    teachers = relationship("TeacherModel", back_populates="department")
 
     __table_args__ = (CheckConstraint("department_code >= 1 and department_code <= 99"),)
 

@@ -1,3 +1,14 @@
+from .conflict import (ConflictException,
+                       DepartmentConflictException,
+                       SpecialtyConflictException,
+                       SpecializationConflictException,
+                       EducationComponentConflictException,
+                       StudyGroupConflictException,
+                       SemesterConflictException,
+                       AcademicHoursConflictException,
+                       AcademicTaskConflictException,
+                       UserConflictException,
+                       TeacherConflictException)
 from .exception import ClientException, UnauthorizedException, ForbiddenException
 from .not_found import (NotFoundException,
                         DepartmentNotFoundException,
@@ -10,14 +21,5 @@ from .not_found import (NotFoundException,
                         AcademicTaskNotFoundException,
                         CurriculumNotFoundException,
                         UserByUsernameNotFoundException,
-                        UserByIdNotFoundException)
-from .conflict import (ConflictException,
-                       DepartmentConflictException,
-                       SpecialtyConflictException,
-                       SpecializationConflictException,
-                       EducationComponentConflictException,
-                       StudyGroupConflictException,
-                       SemesterConflictException,
-                       AcademicHoursConflictException,
-                       AcademicTaskConflictException,
-                       UserConflictException)
+                        UserByIdNotFoundException,
+                        TeacherNotFoundException)
