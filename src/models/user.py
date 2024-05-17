@@ -27,7 +27,7 @@ class UserModel(LoadDistributionBase, IdMixin, TimestampMixin):
             email=self.email,
             password=self.password,
             role=self.role,
-            department_id=str(self.department_id),
+            department_id=str(self.department_id) if self.department_id else None,
             created_at=self.created_at,
             updated_at=self.updated_at
         )
