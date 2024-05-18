@@ -3,7 +3,7 @@ from fastapi_pagination import paginate
 from fastapi_pagination.links import Page
 from loguru import logger
 
-from ..schemas import DepartmentSchema, DepartmentCreateSchema, DepartmentUpdateSchema
+from ..schemas import DepartmentSchema, DepartmentCreateSchema, DepartmentUpdateSchema, TeacherSchema
 from ..services import DepartmentService
 from ..utils.dependencies import UOWDependencies, SecurityDependencies
 
@@ -22,6 +22,11 @@ async def get_departments(uow: UOWDependencies) -> Page[DepartmentSchema]:
 @router.get("/{department_id}", response_model=DepartmentSchema, status_code=200)
 async def get_department_by_id(uow: UOWDependencies, department_id: str) -> DepartmentSchema:
     return await DepartmentService.get_department_by_id(uow, department_id)
+
+
+@router.get("/{department_id}/teachers", response_model=list[TeacherSchema], status_code=200)
+async def get_department_by_id(uow: UOWDependencies, department_id: str) -> list[TeacherSchema]:
+    return await DepartmentService.get_all_teachers_in_department_by_id(uow, department_id)
 
 
 @router.post("", response_model=str, status_code=201)
