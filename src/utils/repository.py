@@ -17,7 +17,7 @@ class AbstractRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_all(self):
+    async def get_all(self, **filter_by):
         raise NotImplementedError
 
     @abstractmethod
@@ -65,12 +65,12 @@ class SQLAlchemyRepository(AbstractRepository):
         except NoResultFound:
             return None
 
-    async def get_all(self) -> list[model]:
+    async def get_all(self, **filter_by) -> list[model]:
         """
         Returns all entities in the table.
         :return: list of entities
         """
-        query = select(self.model)
+        query = select(self.model).filter_by(**filter_by)
         result = await self.session.execute(query)
         return [row[0].to_read_model() for row in result.all()]
 

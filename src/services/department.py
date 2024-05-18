@@ -1,4 +1,4 @@
-from ..schemas import DepartmentSchema, DepartmentCreateSchema
+from ..schemas import DepartmentSchema, DepartmentCreateSchema, TeacherSchema
 from ..exceptions import DepartmentNotFoundException, DepartmentConflictException
 from ..exceptions import ConflictException
 from ..utils.unit_of_work import IUnitOfWork
@@ -17,6 +17,15 @@ class DepartmentService:
             if not department:
                 raise DepartmentNotFoundException(department_id)
             return department
+
+    @staticmethod
+    async def get_all_teachers_in_department_by_id(uow: IUnitOfWork, department_id: str) -> list[TeacherSchema]:
+        async with uow:
+            is_exists = await uow.departments.is_exists(id=department_id)
+            if not is_exists:
+                raise DepartmentNotFoundException(department_id)
+            teachers = await uow.teachers.get_all(department_id=department_id)
+            return teachers
 
     @staticmethod
     async def create_department(uow: IUnitOfWork, department: DepartmentCreateSchema) -> str:
