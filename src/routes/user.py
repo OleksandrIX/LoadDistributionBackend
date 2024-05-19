@@ -10,6 +10,10 @@ router = APIRouter(
 )
 
 
-@router.get("/current", response_model=UserWithoutPasswordSchema, status_code=200)
+@router.get(
+    path="/current",
+    response_model=UserWithoutPasswordSchema,
+    status_code=200
+)
 async def get_current_user(user: CurrentUserDependencies) -> UserWithoutPasswordSchema:
     return UserWithoutPasswordSchema(**user.model_dump())

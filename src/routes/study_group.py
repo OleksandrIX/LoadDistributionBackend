@@ -1,6 +1,4 @@
 from fastapi import APIRouter
-from fastapi_pagination import paginate
-from fastapi_pagination.links import Page
 from loguru import logger
 
 from ..schemas import StudyGroupSchema, StudyGroupCreateSchema, StudyGroupUpdateSchema
@@ -14,24 +12,40 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=Page[StudyGroupSchema], status_code=200)
-async def get_study_groups(uow: UOWDependencies) -> Page[StudyGroupSchema]:
-    return paginate(await StudyGroupService.get_study_groups(uow))
+@router.get(
+    path="",
+    response_model=list[StudyGroupSchema],
+    status_code=200
+)
+async def get_study_groups(uow: UOWDependencies) -> list[StudyGroupSchema]:
+    return await StudyGroupService.get_study_groups(uow)
 
 
-@router.get("/{study_group_id}", response_model=StudyGroupSchema, status_code=200)
+@router.get(
+    path="/{study_group_id}",
+    response_model=StudyGroupSchema,
+    status_code=200
+)
 async def get_study_group_by_id(uow: UOWDependencies, study_group_id: str) -> StudyGroupSchema:
     return await StudyGroupService.get_study_group_by_id(uow, study_group_id)
 
 
-@router.post("", response_model=str, status_code=201)
+@router.post(
+    path="",
+    response_model=str,
+    status_code=201
+)
 async def create_study_group(uow: UOWDependencies, study_group: StudyGroupCreateSchema) -> str:
     study_group_id = await StudyGroupService.create_study_group(uow, study_group)
     logger.success(f"Created study group with id '{study_group_id}'")
     return study_group_id
 
 
-@router.put("/{study_group_id}", response_model=StudyGroupSchema, status_code=200)
+@router.put(
+    path="/{study_group_id}",
+    response_model=StudyGroupSchema,
+    status_code=200
+)
 async def edit_study_group(uow: UOWDependencies,
                            study_group_id: str,
                            study_group: StudyGroupUpdateSchema) -> StudyGroupSchema:
@@ -40,7 +54,11 @@ async def edit_study_group(uow: UOWDependencies,
     return updated_study_group
 
 
-@router.delete("/{study_group_id}", response_model=None, status_code=204)
+@router.delete(
+    path="/{study_group_id}",
+    response_model=None,
+    status_code=204
+)
 async def delete_study_group(uow: UOWDependencies, study_group_id: str) -> None:
     await StudyGroupService.delete_study_group(uow, study_group_id)
     logger.success(f"Deleted study group with id '{study_group_id}'")

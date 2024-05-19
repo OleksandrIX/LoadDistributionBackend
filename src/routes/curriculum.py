@@ -20,14 +20,22 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=Page[CurriculumFileSchema], status_code=200)
+@router.get(
+    "",
+    response_model=Page[CurriculumFileSchema],
+    status_code=200
+)
 async def get_curriculums(
         curriculum_service: Annotated[CurriculumService, Depends(CurriculumService)]
 ) -> Page[CurriculumFileSchema]:
     return paginate(await curriculum_service.get_curriculum_files())
 
 
-@router.post("/upload", response_model=CurriculumFileSchema, status_code=201)
+@router.post(
+    path="/upload",
+    response_model=CurriculumFileSchema,
+    status_code=201
+)
 async def upload_curriculum(
         curriculum_service: Annotated[CurriculumService, Depends(CurriculumService)],
         file: UploadFile = File(...),
@@ -37,7 +45,11 @@ async def upload_curriculum(
     return curriculum
 
 
-@router.post("/parse", response_model=ParsedCurriculumSchema, status_code=200)
+@router.post(
+    path="/parse",
+    response_model=ParsedCurriculumSchema,
+    status_code=200
+)
 async def parse_curriculum(
         curriculum_service: Annotated[CurriculumService, Depends(CurriculumService)],
         curriculum_filename: str
@@ -54,7 +66,11 @@ async def parse_curriculum(
     )
 
 
-@router.post("/save", response_model=CurriculumDataSavedResponseSchema, status_code=201)
+@router.post(
+    path="/save",
+    response_model=CurriculumDataSavedResponseSchema,
+    status_code=201
+)
 async def save_curriculum_data(
         uow: UOWDependencies,
         curriculum_service: Annotated[CurriculumService, Depends(CurriculumService)],
