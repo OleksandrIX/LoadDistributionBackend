@@ -1,9 +1,7 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter
 
-from ..schemas import UserSchema, UserWithoutPasswordSchema
-from ..services import UserService
-from ..utils.dependencies import UOWDependencies, SecurityDependencies
-from ..utils.security import JWTBearer, verify_token
+from ..schemas import UserWithoutPasswordSchema
+from ..utils.dependencies import SecurityDependencies, CurrentUserDependencies
 
 router = APIRouter(
     prefix="/api/v1/users",
@@ -13,9 +11,5 @@ router = APIRouter(
 
 
 @router.get("/current", response_model=UserWithoutPasswordSchema, status_code=200)
-async def get_current_user(request: Request, uow: UOWDependencies) -> UserWithoutPasswordSchema:
-    credentials = await JWTBearer().__call__(request)
-    payload = verify_token(credentials, type_token="access")
-    user_id = payload.sub
-    user: UserSchema = await UserService.get_user_by_id(uow, user_id)
+async def get_current_user(user: CurrentUserDependencies) -> UserWithoutPasswordSchema:
     return UserWithoutPasswordSchema(**user.model_dump())
