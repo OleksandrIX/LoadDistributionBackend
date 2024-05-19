@@ -5,10 +5,9 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 
-from .schema import RoleEnum
 from .unit_of_work import IUnitOfWork, UnitOfWork
 from ..config import security_settings
-from ..exceptions import UnauthorizedException, ForbiddenException
+from ..exceptions import UnauthorizedException
 from ..schemas import TokenPayloadSchema, UserSchema
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -92,16 +91,6 @@ async def get_current_user(request: Request, uow: IUnitOfWork = Depends(UnitOfWo
     from ..services import UserService
     user_id = await get_user_id_from_token(request)
     return await UserService.get_user_by_id(uow, user_id)
-
-
-async def check_is_admin(request: Request, uow: IUnitOfWork = Depends(UnitOfWork)) -> bool:
-    user: UserSchema = await get_current_user(request, uow)
-    if user.role == RoleEnum.admin:
-        return user.department_id
-    elif user.role == RoleEnum.user:
-        raise ForbiddenException(message="User is not an administrator")
-    else:
-        raise ForbiddenException(message="Unknown role of the user")
 
 
 class JWTBearer(HTTPBearer):
