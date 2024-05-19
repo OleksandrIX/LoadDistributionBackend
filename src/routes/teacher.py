@@ -5,7 +5,7 @@ from loguru import logger
 
 from ..schemas import TeacherSchema, TeacherCreateSchema, TeacherUpdateSchema
 from ..services import TeacherService
-from ..utils.dependencies import UOWDependencies, SecurityDependencies
+from ..utils.dependencies import UOWDependencies, SecurityDependencies, AdminDependencies
 
 router = APIRouter(
     prefix="/api/v1/teachers",
@@ -14,7 +14,7 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=Page[TeacherSchema], status_code=200)
+@router.get("", response_model=Page[TeacherSchema], status_code=200, dependencies=[AdminDependencies])
 async def get_teachers(uow: UOWDependencies) -> Page[TeacherSchema]:
     return paginate(await TeacherService.get_teachers(uow))
 
