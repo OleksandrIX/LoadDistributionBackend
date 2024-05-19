@@ -5,7 +5,7 @@ from loguru import logger
 
 from ..schemas import DepartmentSchema, DepartmentCreateSchema, DepartmentUpdateSchema, TeacherSchema
 from ..services import DepartmentService
-from ..utils.dependencies import UOWDependencies, SecurityDependencies
+from ..utils.dependencies import UOWDependencies, SecurityDependencies, AdminDependencies, AccessControlDependencies
 
 router = APIRouter(
     prefix="/api/v1/departments",
@@ -17,7 +17,8 @@ router = APIRouter(
 @router.get(
     path="",
     response_model=Page[DepartmentSchema],
-    status_code=200
+    status_code=200,
+    dependencies=[AdminDependencies]
 )
 async def get_departments(uow: UOWDependencies) -> Page[DepartmentSchema]:
     return paginate(await DepartmentService.get_departments(uow))
@@ -26,7 +27,8 @@ async def get_departments(uow: UOWDependencies) -> Page[DepartmentSchema]:
 @router.get(
     path="/{department_id}",
     response_model=DepartmentSchema,
-    status_code=200
+    status_code=200,
+    dependencies=[AccessControlDependencies]
 )
 async def get_department_by_id(uow: UOWDependencies, department_id: str) -> DepartmentSchema:
     return await DepartmentService.get_department_by_id(uow, department_id)
@@ -35,7 +37,8 @@ async def get_department_by_id(uow: UOWDependencies, department_id: str) -> Depa
 @router.get(
     path="/{department_id}/teachers",
     response_model=list[TeacherSchema],
-    status_code=200
+    status_code=200,
+    dependencies=[AccessControlDependencies]
 )
 async def get_department_by_id(uow: UOWDependencies, department_id: str) -> list[TeacherSchema]:
     return await DepartmentService.get_all_teachers_in_department_by_id(uow, department_id)
@@ -44,7 +47,8 @@ async def get_department_by_id(uow: UOWDependencies, department_id: str) -> list
 @router.post(
     path="",
     response_model=str,
-    status_code=201
+    status_code=201,
+    dependencies=[AdminDependencies]
 )
 async def create_department(uow: UOWDependencies, department: DepartmentCreateSchema) -> str:
     department_id = await DepartmentService.create_department(uow, department)
@@ -55,7 +59,8 @@ async def create_department(uow: UOWDependencies, department: DepartmentCreateSc
 @router.put(
     path="/{department_id}",
     response_model=DepartmentSchema,
-    status_code=200
+    status_code=200,
+    dependencies=[AdminDependencies]
 )
 async def edit_department(uow: UOWDependencies,
                           department_id: str,
@@ -68,7 +73,8 @@ async def edit_department(uow: UOWDependencies,
 @router.delete(
     path="/{department_id}",
     response_model=None,
-    status_code=204
+    status_code=204,
+    dependencies=[AdminDependencies]
 )
 async def delete_department(uow: UOWDependencies, department_id: str) -> None:
     await DepartmentService.delete_department(uow, department_id)

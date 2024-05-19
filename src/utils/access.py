@@ -47,7 +47,9 @@ async def access_control(request: Request,
 
     match resource:
         case "departments":
-            ...
+            department_id = request.path_params.get("department_id")
+            if department_id:
+                is_accessible = department_id_from_user == department_id
         case "teachers":
             teacher_id = request.path_params.get("teacher_id")
             department_id_from_body = body.get("department_id")
