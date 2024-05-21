@@ -1,5 +1,3 @@
-from loguru import logger
-
 from ..schemas import CurriculumSpreadsheetBlockSchema, CurriculumSpreadsheetBlockRequestSchema
 
 

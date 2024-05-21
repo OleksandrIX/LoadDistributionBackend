@@ -3,6 +3,7 @@ import io
 from minio import Minio
 from loguru import logger
 from fastapi import UploadFile
+from fastapi.responses import StreamingResponse
 
 from modules.curriculum_parser import processing_of_curriculum
 
@@ -35,11 +36,21 @@ class CurriculumService:
                                                       object_name=minio_file.object_name)
             files.append(CurriculumFileSchema(
                 bucket_name=file_stat.bucket_name,
-                filename=file_stat.object_name,
+                filename=file_stat.object_name.split("/")[-1],
                 content_type=file_stat.content_type,
                 size=file_stat.size,
             ))
         return files
+
+    async def get_curriculum_file(self, filename: str):
+        file = self.minio_client.get_object(bucket_name=minio_settings.MINIO_BUCKET_NAME,
+                                            object_name=self.curriculum_dir + filename)
+        if not file:
+            raise CurriculumNotFoundException(filename)
+        file_stat = self.minio_client.stat_object(bucket_name=minio_settings.MINIO_BUCKET_NAME,
+                                                  object_name=self.curriculum_dir + filename)
+        file_data = io.BytesIO(file.read())
+        return StreamingResponse(file_data, media_type=file_stat.content_type)
 
     async def save_curriculum_file(self, file: UploadFile) -> CurriculumFileSchema:
         file_data = await file.read()
@@ -55,7 +66,7 @@ class CurriculumService:
                                                   object_name=response.object_name)
         file = CurriculumFileSchema(
             bucket_name=file_stat.bucket_name,
-            filename=file_stat.object_name,
+            filename=file_stat.object_name.split("/")[-1],
             content_type=file_stat.content_type,
             size=file_stat.size,
         )
