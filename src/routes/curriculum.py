@@ -1,4 +1,3 @@
-from uuid import uuid4
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, UploadFile, File
@@ -60,9 +59,7 @@ async def download_curriculum(
         curriculum_filename: str
 ) -> StreamingResponse:
     check_curriculm_file_extension(curriculum_filename)
-    response = await curriculum_service.get_curriculum_file(curriculum_filename)
-    response.headers["Content-Disposition"] = f"attachment; filename={uuid4()}"
-    return response
+    return await curriculum_service.get_curriculum_file(curriculum_filename)
 
 
 @router.post(
@@ -104,3 +101,18 @@ async def save_curriculum_data(
         curriculum_data.curriculum_spreadsheet_blocks
     )
     return CurriculumDataSavedResponseSchema(education_components=education_components)
+
+
+@router.delete(
+    path="",
+    response_model=None,
+    status_code=204,
+    dependencies=[AdminDependencies]
+)
+async def delete_curriculum(
+        curriculum_service: CurriculumServiceDependencies,
+        curriculum_filename: str
+) -> None:
+    check_curriculm_file_extension(curriculum_filename)
+    await curriculum_service.delete_curriculum_file(curriculum_filename)
+    logger.success(f"Deleted curriculum file with filename '{curriculum_filename}'")

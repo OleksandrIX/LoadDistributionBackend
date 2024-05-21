@@ -5,6 +5,7 @@ from ..utils.schema import EducationDegreeEnum, ReportingTypeEnum
 
 
 class CurriculumFileSchema(BaseModel):
+    etag: str
     bucket_name: str
     filename: str
     content_type: str
