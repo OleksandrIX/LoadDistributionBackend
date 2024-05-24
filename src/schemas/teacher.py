@@ -1,3 +1,4 @@
+from uuid import UUID
 from typing import Optional
 from pydantic import BaseModel, Field, field_validator
 
@@ -20,7 +21,7 @@ class TeacherBase(BaseModel):
     years_of_service: Optional[int] = Field(None, ge=1, le=50)
     teacher_rate: float = Field(..., ge=0.25, le=5.00)
     is_civilian: bool
-    department_id: str
+    department_id: UUID
 
     @classmethod
     @field_validator("military_rank", "years_of_service", mode="before")
@@ -49,4 +50,5 @@ class TeacherUpdateSchema(TeacherBase):
 
 
 class TeacherSchema(TimestampMixinSchema, IdMixinSchema, TeacherBase):
-    ...
+    class Config:
+        from_attributes = True
