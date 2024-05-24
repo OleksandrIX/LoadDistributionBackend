@@ -1,4 +1,4 @@
-from ..schemas import DepartmentSchema, DepartmentCreateSchema, TeacherSchema
+from ..schemas import DepartmentSchema, DepartmentCreateSchema, DepartmentWithTeachersSchema, TeacherSchema
 from ..exceptions import DepartmentNotFoundException, DepartmentConflictException
 from ..exceptions import ConflictException
 from ..utils.unit_of_work import IUnitOfWork
@@ -9,6 +9,11 @@ class DepartmentService:
     async def get_departments(uow: IUnitOfWork) -> list[DepartmentSchema]:
         async with uow:
             return await uow.departments.get_all()
+
+    @staticmethod
+    async def get_department_with_teachers(uow: IUnitOfWork) -> list[DepartmentWithTeachersSchema]:
+        async with uow:
+            return await uow.departments.get_all_with_teachers()
 
     @staticmethod
     async def get_department_by_id(uow: IUnitOfWork, department_id: str) -> DepartmentSchema:

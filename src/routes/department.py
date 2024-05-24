@@ -1,7 +1,11 @@
 from fastapi import APIRouter
 from loguru import logger
 
-from ..schemas import DepartmentSchema, DepartmentCreateSchema, DepartmentUpdateSchema, TeacherSchema
+from ..schemas import (DepartmentSchema,
+                       DepartmentCreateSchema,
+                       DepartmentUpdateSchema,
+                       DepartmentWithTeachersSchema,
+                       TeacherSchema)
 from ..services import DepartmentService
 from ..utils.dependencies import UOWDependencies, SecurityDependencies, AdminDependencies, AccessControlDependencies
 
@@ -20,6 +24,16 @@ router = APIRouter(
 )
 async def get_departments(uow: UOWDependencies) -> list[DepartmentSchema]:
     return await DepartmentService.get_departments(uow)
+
+
+@router.get(
+    path="/teachers",
+    response_model=list[DepartmentWithTeachersSchema],
+    status_code=200,
+    dependencies=[AdminDependencies]
+)
+async def get_departments(uow: UOWDependencies) -> list[DepartmentWithTeachersSchema]:
+    return await DepartmentService.get_department_with_teachers(uow)
 
 
 @router.get(
