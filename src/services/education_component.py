@@ -1,6 +1,9 @@
-from ..schemas import EducationComponentSchema, EducationComponentCreateSchema, EducationComponentUpdateSchema
-from ..exceptions import EducationComponentNotFoundException, EducationComponentConflictException
 from ..exceptions import ConflictException
+from ..exceptions import EducationComponentNotFoundException, EducationComponentConflictException
+from ..schemas import (EducationComponentSchema,
+                       EducationComponentCreateSchema,
+                       EducationComponentUpdateSchema,
+                       EducationComponenWithWorkloadSchema)
 from ..utils.unit_of_work import IUnitOfWork
 
 
@@ -16,6 +19,20 @@ class EducationComponentService:
             education_component = await uow.education_components.get_one(id=education_component_id)
             if not education_component:
                 raise EducationComponentNotFoundException(education_component_id)
+            return education_component
+
+    @staticmethod
+    async def get_education_component_by_id_with_workload(
+            uow: IUnitOfWork,
+            education_component_id: str
+    ) -> EducationComponenWithWorkloadSchema:
+        async with uow:
+            is_exists = await uow.education_components.is_exists(id=education_component_id)
+            if not is_exists:
+                raise EducationComponentNotFoundException(education_component_id)
+            education_component = await uow.education_components.get_education_component_by_id_with_workload(
+                education_component_id=education_component_id
+            )
             return education_component
 
     @staticmethod

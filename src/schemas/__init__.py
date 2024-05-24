@@ -4,6 +4,9 @@ from .academic_hours import (AcademicHoursSchema,
 from .academic_task import (AcademicTaskSchema,
                             AcademicTaskCreateSchema,
                             AcademicTaskUpdateSchema)
+from .academic_workload import (AcademicWorkloadSchema,
+                                AcademicWorkloadCreateSchema,
+                                AcademicWorkloadUpdateSchema)
 from .curriculum import (CurriculumFileSchema,
                          ParsedCurriculumSchema,
                          CurriculumDataRequestSchema,
@@ -18,7 +21,8 @@ from .department import (DepartmentSchema,
                          DepartmentWithEducationComponentsSchema)
 from .education_component import (EducationComponentSchema,
                                   EducationComponentCreateSchema,
-                                  EducationComponentUpdateSchema)
+                                  EducationComponentUpdateSchema,
+                                  EducationComponenWithWorkloadSchema)
 from .education_components_study_groups import EducationComponentsStudyGroupsSchema
 from .semester import (SemesterSchema,
                        SemesterCreateSchema,

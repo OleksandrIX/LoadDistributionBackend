@@ -2,6 +2,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
+from .academic_workload import AcademicWorkloadSchema
 from ..utils.schema import IdMixinSchema, TimestampMixinSchema, EducationDegreeEnum
 
 
@@ -26,3 +27,7 @@ class EducationComponentUpdateSchema(EducationComponentBase):
 class EducationComponentSchema(TimestampMixinSchema, IdMixinSchema, EducationComponentBase):
     class Config:
         from_attributes = True
+
+
+class EducationComponenWithWorkloadSchema(EducationComponentSchema):
+    academic_workloads: list[AcademicWorkloadSchema]

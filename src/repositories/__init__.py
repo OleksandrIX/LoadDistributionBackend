@@ -1,5 +1,6 @@
 from .academic_hours import AcademicHoursRepository
 from .academic_task import AcademicTaskRepository
+from .academic_workload import AcademicWorkloadRepository
 from .department import DepartmentRepository
 from .education_component import EducationComponentRepository
 from .education_components_study_groups import EducationComponentsStudyGroupsRepository

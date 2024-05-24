@@ -21,7 +21,12 @@ async def get_request_body(request: Request) -> dict:
         return {}
 
 
-async def check_access_to_teachers(request: Request, body: dict, user_department_id: str, uow: IUnitOfWork) -> bool:
+async def check_access_to_teachers(
+        request: Request,
+        body: dict,
+        user_department_id: str,
+        uow: IUnitOfWork
+) -> bool:
     from ..services import TeacherService
 
     teacher_id = request.path_params.get("teacher_id")
@@ -33,6 +38,30 @@ async def check_access_to_teachers(request: Request, body: dict, user_department
         else:
             teacher = await TeacherService.get_teacher_by_id(uow, teacher_id)
             return has_access(user_department_id, teacher.department_id)
+    else:
+        return has_access(user_department_id, department_id) if department_id else False
+
+
+async def check_access_to_education_components(
+        request: Request,
+        body: dict,
+        user_department_id: str,
+        uow: IUnitOfWork
+) -> bool:
+    from ..services import EducationComponentService
+
+    education_component_id = request.path_params.get("education_component_id")
+    department_id = body.get("department_id")
+
+    if education_component_id:
+        if department_id:
+            return has_access(user_department_id, department_id)
+        else:
+            education_component = await EducationComponentService.get_education_component_by_id(
+                uow,
+                education_component_id
+            )
+            return has_access(user_department_id, education_component.department_id)
     else:
         return has_access(user_department_id, department_id) if department_id else False
 
@@ -56,6 +85,8 @@ async def access_control(
             is_accessible = has_access(user_department_id, department_id) if department_id else False
         case "teachers":
             is_accessible = await check_access_to_teachers(request, body, user_department_id, uow)
+        case "education-components":
+            is_accessible = await check_access_to_education_components(request, body, user_department_id, uow)
         case _:
             raise ForbiddenException(message="Unknown resource.")
 
