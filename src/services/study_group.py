@@ -23,7 +23,7 @@ class StudyGroupService:
         study_group_dict = study_group.model_dump()
         async with uow:
             try:
-                study_group: StudyGroupSchema = await uow.study_groups.add_one(data=study_group_dict)
+                study_group: StudyGroupSchema = await uow.study_groups.create_one(data=study_group_dict)
                 await uow.commit()
                 return str(study_group.id)
             except ConflictException:

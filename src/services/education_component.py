@@ -23,7 +23,7 @@ class EducationComponentService:
         education_component_dict = education_component.model_dump()
         async with uow:
             try:
-                education_component: EducationComponentSchema = await uow.education_components.add_one(
+                education_component: EducationComponentSchema = await uow.education_components.create_one(
                     data=education_component_dict
                 )
                 await uow.commit()

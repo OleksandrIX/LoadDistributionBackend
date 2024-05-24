@@ -21,7 +21,7 @@ class AbstractRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def add_one(self, data: dict):
+    async def create_one(self, data: dict):
         raise NotImplementedError
 
     @abstractmethod
@@ -72,9 +72,10 @@ class SQLAlchemyRepository(AbstractRepository):
         """
         query = select(self.model).filter_by(**filter_by)
         result = await self.session.execute(query)
-        return [row[0].to_read_model() for row in result.all()]
+        entities = result.scalars().all()
+        return [row.to_read_model() for row in entities]
 
-    async def add_one(self, data: dict) -> str:
+    async def create_one(self, data: dict) -> str:
         """
         Adds a new entity in the table.
         :param data: dictionary with data to be added into the table

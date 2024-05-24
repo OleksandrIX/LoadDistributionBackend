@@ -23,7 +23,7 @@ class TeacherService:
         teacher_dict = teacher.model_dump()
         async with uow:
             try:
-                teacher: TeacherSchema = await uow.teachers.add_one(data=teacher_dict)
+                teacher: TeacherSchema = await uow.teachers.create_one(data=teacher_dict)
                 await uow.commit()
                 return str(teacher.id)
             except ConflictException:

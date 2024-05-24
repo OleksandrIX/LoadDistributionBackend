@@ -37,7 +37,7 @@ class DepartmentService:
         department_dict: dict = department.model_dump()
         async with uow:
             try:
-                department: DepartmentSchema = await uow.departments.add_one(data=department_dict)
+                department: DepartmentSchema = await uow.departments.create_one(data=department_dict)
                 await uow.commit()
                 return str(department.id)
             except ConflictException:
