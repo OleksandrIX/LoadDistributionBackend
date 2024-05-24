@@ -1,14 +1,14 @@
 from datetime import datetime, timedelta
 
-from fastapi import Request
+from fastapi import Request, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import jwt, JWTError
-from loguru import logger
 from passlib.context import CryptContext
 
+from .unit_of_work import IUnitOfWork, UnitOfWork
 from ..config import security_settings
 from ..exceptions import UnauthorizedException
-from ..schemas import TokenPayloadSchema
+from ..schemas import TokenPayloadSchema, UserSchema
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -78,6 +78,19 @@ def verify_token(token: str, type_token: str) -> TokenPayloadSchema:
         return token_payload
     except JWTError as err:
         raise UnauthorizedException(message=str(err))
+
+
+async def get_user_id_from_token(request: Request) -> str:
+    credentials = await JWTBearer().__call__(request)
+    payload = verify_token(credentials, type_token="access")
+    user_id = payload.sub
+    return user_id
+
+
+async def get_current_user(request: Request, uow: IUnitOfWork = Depends(UnitOfWork)) -> UserSchema:
+    from ..services import UserService
+    user_id = await get_user_id_from_token(request)
+    return await UserService.get_user_by_id(uow, user_id)
 
 
 class JWTBearer(HTTPBearer):

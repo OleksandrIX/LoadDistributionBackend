@@ -13,7 +13,8 @@ from .curriculum import (CurriculumFileSchema,
                          CurriculumDataSavedResponseSchema)
 from .department import (DepartmentSchema,
                          DepartmentCreateSchema,
-                         DepartmentUpdateSchema)
+                         DepartmentUpdateSchema,
+                         DepartmentWithTeachersSchema)
 from .education_component import (EducationComponentSchema,
                                   EducationComponentCreateSchema,
                                   EducationComponentUpdateSchema)

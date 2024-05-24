@@ -1,8 +1,9 @@
 import io
 
-from minio import Minio
+from minio import Minio, S3Error
 from loguru import logger
 from fastapi import UploadFile
+from fastapi.responses import StreamingResponse
 
 from modules.curriculum_parser import processing_of_curriculum
 
@@ -27,19 +28,52 @@ class CurriculumService:
 
     async def get_curriculum_files(self) -> list[CurriculumFileSchema]:
         files: list[CurriculumFileSchema] = []
-        minio_files = self.minio_client.list_objects(bucket_name=minio_settings.MINIO_BUCKET_NAME,
-                                                     prefix=self.curriculum_dir)
+        minio_files = self.minio_client.list_objects(
+            bucket_name=minio_settings.MINIO_BUCKET_NAME,
+            prefix=self.curriculum_dir
+        )
 
         for minio_file in minio_files:
-            file_stat = self.minio_client.stat_object(bucket_name=minio_file.bucket_name,
-                                                      object_name=minio_file.object_name)
+            file_stat = self.minio_client.stat_object(
+                bucket_name=minio_file.bucket_name,
+                object_name=minio_file.object_name
+            )
+
             files.append(CurriculumFileSchema(
+                etag=file_stat.etag,
                 bucket_name=file_stat.bucket_name,
-                filename=file_stat.object_name,
+                filename=file_stat.object_name.split("/")[-1],
                 content_type=file_stat.content_type,
                 size=file_stat.size,
             ))
         return files
+
+    async def get_curriculum_file(self, filename: str):
+        try:
+            file_stat = self.minio_client.stat_object(
+                bucket_name=minio_settings.MINIO_BUCKET_NAME,
+                object_name=self.curriculum_dir + filename
+            )
+
+            file = self.minio_client.get_object(
+                bucket_name=minio_settings.MINIO_BUCKET_NAME,
+                object_name=self.curriculum_dir + filename
+            )
+
+            file_data = io.BytesIO(file.read())
+            response = StreamingResponse(
+                content=file_data,
+                status_code=200,
+                media_type=file_stat.content_type
+            )
+
+            response.headers["Content-Disposition"] = f"attachment; filename={file_stat.etag}"
+            return response
+        except S3Error as err:
+            if err.code == "NoSuchKey":
+                raise CurriculumNotFoundException(filename)
+            else:
+                raise Exception(err)
 
     async def save_curriculum_file(self, file: UploadFile) -> CurriculumFileSchema:
         file_data = await file.read()
@@ -51,32 +85,48 @@ class CurriculumService:
             content_type=file.content_type
         )
 
-        file_stat = self.minio_client.stat_object(bucket_name=response.bucket_name,
-                                                  object_name=response.object_name)
+        file_stat = self.minio_client.stat_object(
+            bucket_name=response.bucket_name,
+            object_name=response.object_name
+        )
+
         file = CurriculumFileSchema(
+            etag=file_stat.etag,
             bucket_name=file_stat.bucket_name,
-            filename=file_stat.object_name,
+            filename=file_stat.object_name.split("/")[-1],
             content_type=file_stat.content_type,
             size=file_stat.size,
         )
         return file
 
     async def processing_curriculum_file(self, filename) -> tuple[CurriculumFileSchema, list, list]:
-        file = self.minio_client.get_object(bucket_name=minio_settings.MINIO_BUCKET_NAME,
-                                            object_name=self.curriculum_dir + filename)
-        if not file:
-            raise CurriculumNotFoundException(filename)
-        file_data = io.BytesIO(file.read())
-        curriculum_spreadsheet_blocks, curriculum_errors = processing_of_curriculum(file_data, filename)
-        file_stat = self.minio_client.stat_object(bucket_name=minio_settings.MINIO_BUCKET_NAME,
-                                                  object_name=self.curriculum_dir + filename)
-        curriculum_file = CurriculumFileSchema(
-            bucket_name=file_stat.bucket_name,
-            filename=file_stat.object_name,
-            content_type=file_stat.content_type,
-            size=file_stat.size,
-        )
-        return curriculum_file, curriculum_spreadsheet_blocks, curriculum_errors
+        try:
+            file = self.minio_client.get_object(
+                bucket_name=minio_settings.MINIO_BUCKET_NAME,
+                object_name=self.curriculum_dir + filename
+            )
+
+            file_data = io.BytesIO(file.read())
+            curriculum_spreadsheet_blocks, curriculum_errors = processing_of_curriculum(file_data, filename)
+            file_stat = self.minio_client.stat_object(
+                bucket_name=minio_settings.MINIO_BUCKET_NAME,
+                object_name=self.curriculum_dir + filename
+            )
+
+            curriculum_file = CurriculumFileSchema(
+                etag=file_stat.etag,
+                bucket_name=file_stat.bucket_name,
+                filename=file_stat.object_name,
+                content_type=file_stat.content_type,
+                size=file_stat.size,
+            )
+
+            return curriculum_file, curriculum_spreadsheet_blocks, curriculum_errors
+        except S3Error as err:
+            if err.code == "NoSuchKey":
+                raise CurriculumNotFoundException(filename)
+            else:
+                raise Exception(err)
 
     @staticmethod
     async def save_curriculum_data(uow: IUnitOfWork,
@@ -189,3 +239,15 @@ class CurriculumService:
                     await uow.commit()
 
         return education_components
+
+    async def delete_curriculum_file(self, filename: str):
+        try:
+            self.minio_client.remove_object(
+                bucket_name=minio_settings.MINIO_BUCKET_NAME,
+                object_name=self.curriculum_dir + filename
+            )
+        except S3Error as err:
+            if err.code == "NoSuchKey":
+                raise CurriculumNotFoundException(filename)
+            else:
+                raise Exception(err)

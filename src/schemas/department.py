@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 
 from ..utils.schema import IdMixinSchema, TimestampMixinSchema
+from .teacher import TeacherSchema
 
 
 class DepartmentBase(BaseModel):
@@ -17,4 +18,9 @@ class DepartmentUpdateSchema(DepartmentBase):
 
 
 class DepartmentSchema(TimestampMixinSchema, IdMixinSchema, DepartmentBase):
-    ...
+    class Config:
+        from_attributes = True
+
+
+class DepartmentWithTeachersSchema(DepartmentSchema):
+    teachers: list[TeacherSchema]

@@ -20,7 +20,11 @@ router = APIRouter(
 )
 
 
-@router.post("/registration", response_model=UserWithoutPasswordSchema, status_code=201)
+@router.post(
+    path="/registration",
+    response_model=UserWithoutPasswordSchema,
+    status_code=201
+)
 async def registration_user(uow: UOWDependencies, user: UserRegistrationSchema) -> UserWithoutPasswordSchema:
     user: UserSchema = await UserService.create_user(uow, user)
     logger.success(f"Created user with id '{user.id}'")
@@ -48,7 +52,7 @@ async def login(response: Response, uow: UOWDependencies, login_user: UserLoginS
 
 
 @router.post(
-    "/refresh",
+    path="/refresh",
     status_code=200,
     response_model=TokenSchema,
     response_description="Return access token"

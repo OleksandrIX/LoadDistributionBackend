@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, SmallInteger, CheckConstraint
 from sqlalchemy.orm import relationship
 
-from ..schemas import DepartmentSchema
+from ..schemas import DepartmentSchema, DepartmentWithTeachersSchema
 from ..utils.database import LoadDistributionBase
 from ..utils.model import IdMixin, TimestampMixin
 
@@ -20,10 +20,7 @@ class DepartmentModel(LoadDistributionBase, IdMixin, TimestampMixin):
     __table_args__ = (CheckConstraint("department_code >= 1 and department_code <= 99"),)
 
     def to_read_model(self) -> DepartmentSchema:
-        return DepartmentSchema(
-            id=self.id,
-            department_code=self.department_code,
-            department_name=self.department_name,
-            created_at=self.created_at,
-            updated_at=self.updated_at,
-        )
+        return DepartmentSchema.from_orm(self)
+
+    def to_read_model_with_teachers(self) -> DepartmentWithTeachersSchema:
+        return DepartmentWithTeachersSchema.from_orm(self)
