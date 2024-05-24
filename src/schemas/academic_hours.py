@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from pydantic import BaseModel, Field
 
 from ..utils.schema import IdMixinSchema, TimestampMixinSchema
@@ -9,7 +11,7 @@ class AcademicHoursBase(BaseModel):
     group_hours: int = Field(..., ge=0, le=400)
     practical_hours: int = Field(..., ge=0, le=400)
     self_study_hours: int = Field(..., ge=0, le=400)
-    semester_id: str
+    semester_id: UUID
 
 
 class AcademicHoursCreateSchema(AcademicHoursBase):
@@ -21,4 +23,5 @@ class AcademicHoursUpdateSchema(AcademicHoursBase):
 
 
 class AcademicHoursSchema(TimestampMixinSchema, IdMixinSchema, AcademicHoursBase):
-    ...
+    class Config:
+        from_attributes = True

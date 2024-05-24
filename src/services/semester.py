@@ -23,7 +23,7 @@ class SemesterService:
         semester_dict = semester.model_dump()
         async with uow:
             try:
-                semester: SemesterSchema = await uow.semesters.add_one(data=semester_dict)
+                semester: SemesterSchema = await uow.semesters.create_one(data=semester_dict)
                 await uow.commit()
                 return str(semester.id)
             except ConflictException:

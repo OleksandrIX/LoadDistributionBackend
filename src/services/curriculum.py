@@ -159,7 +159,7 @@ class CurriculumService:
                     )
 
                     if not education_component:
-                        education_component: EducationComponentSchema = await uow.education_components.add_one(
+                        education_component: EducationComponentSchema = await uow.education_components.create_one(
                             data=EducationComponentCreateSchema(
                                 education_component_name=ec_schema.education_component_name.strip(),
                                 education_component_code=ec_schema.education_component_code.strip(),
@@ -172,7 +172,7 @@ class CurriculumService:
                         )
 
                         for semester_schema in ec_schema.semesters:
-                            semester: SemesterSchema = await uow.semesters.add_one(
+                            semester: SemesterSchema = await uow.semesters.create_one(
                                 data=SemesterCreateSchema(
                                     semester_number=get_current_semester_from_course_and_semester_number(
                                         course=block_data.course_study,
@@ -185,7 +185,7 @@ class CurriculumService:
                             )
 
                             academic_hours = semester_schema.academic_hours
-                            await uow.academic_hours.add_one(
+                            await uow.academic_hours.create_one(
                                 data=AcademicHoursCreateSchema(
                                     amount_classroom_hours=academic_hours.amount_classroom_hours,
                                     lecture_hours=academic_hours.lecture_hours,
@@ -197,7 +197,7 @@ class CurriculumService:
                             )
 
                             academic_task = semester_schema.academic_task
-                            await uow.academic_tasks.add_one(
+                            await uow.academic_tasks.create_one(
                                 data=AcademicTaskCreateSchema(
                                     term_papers=academic_task.term_papers,
                                     modular_control_works=academic_task.modular_control_works,
@@ -214,7 +214,7 @@ class CurriculumService:
                         study_group: StudyGroupSchema = await uow.study_groups.get_one(group_code=group_code)
 
                         if not study_group:
-                            study_group: StudyGroupSchema = await uow.study_groups.add_one(
+                            study_group: StudyGroupSchema = await uow.study_groups.create_one(
                                 data=StudyGroupCreateSchema(
                                     group_code=group_code,
                                     course_study=block_data.course_study,
@@ -230,7 +230,7 @@ class CurriculumService:
                         )
 
                         if not is_exists:
-                            await uow.education_components_study_groups.add_one(
+                            await uow.education_components_study_groups.create_one(
                                 data=EducationComponentsStudyGroupsSchema(
                                     education_component_id=str(education_component.id),
                                     study_group_id=str(study_group.id)

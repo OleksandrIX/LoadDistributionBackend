@@ -26,12 +26,4 @@ class SemesterModel(LoadDistributionBase, IdMixin, TimestampMixin):
     )
 
     def to_read_model(self) -> SemesterSchema:
-        return SemesterSchema(
-            id=self.id,
-            semester_number=self.semester_number,
-            total_amount_hours=self.total_amount_hours,
-            reporting_type=self.reporting_type,
-            education_component_id=str(self.education_component_id),
-            created_at=self.created_at,
-            updated_at=self.updated_at
-        )
+        return SemesterSchema.from_orm(self)

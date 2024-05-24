@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
-from ..utils.schema import IdMixinSchema, TimestampMixinSchema
 from .teacher import TeacherSchema
+from ..utils.schema import IdMixinSchema, TimestampMixinSchema
 
 
 class DepartmentBase(BaseModel):

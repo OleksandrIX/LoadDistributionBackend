@@ -1,4 +1,6 @@
 from typing import Optional
+from uuid import UUID
+
 from pydantic import BaseModel, Field, EmailStr
 
 from ..utils.schema import IdMixinSchema, TimestampMixinSchema, RoleEnum
@@ -19,11 +21,14 @@ class UserBase(BaseModel):
     username: str = Field(..., max_length=30)
     email: EmailStr
     role: RoleEnum
-    department_id: Optional[str]
+    department_id: Optional[UUID]
 
 
 class UserSchema(TimestampMixinSchema, IdMixinSchema, UserBase):
     password: str
+
+    class Config:
+        from_attributes = True
 
 
 class UserWithoutPasswordSchema(TimestampMixinSchema, IdMixinSchema, UserBase):

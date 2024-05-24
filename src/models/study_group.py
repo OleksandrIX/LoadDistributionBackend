@@ -22,12 +22,4 @@ class StudyGroupModel(LoadDistributionBase, IdMixin, TimestampMixin):
     )
 
     def to_read_model(self) -> StudyGroupSchema:
-        return StudyGroupSchema(
-            id=self.id,
-            group_code=self.group_code,
-            course_study=self.course_study,
-            education_degree=self.education_degree,
-            number_listeners=self.number_listeners,
-            created_at=self.created_at,
-            updated_at=self.updated_at
-        )
+        return StudyGroupSchema.from_orm(self)

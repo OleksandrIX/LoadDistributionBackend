@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from pydantic import BaseModel, Field
 
 from ..utils.schema import IdMixinSchema, TimestampMixinSchema
@@ -8,7 +10,7 @@ class AcademicTaskBase(BaseModel):
     modular_control_works: int = Field(..., ge=0, le=10)
     essays: int = Field(..., ge=0, le=10)
     calculation_graphic_works: int = Field(..., ge=0, le=10)
-    semester_id: str
+    semester_id: UUID
 
 
 class AcademicTaskCreateSchema(AcademicTaskBase):
@@ -20,4 +22,5 @@ class AcademicTaskUpdateSchema(AcademicTaskBase):
 
 
 class AcademicTaskSchema(TimestampMixinSchema, IdMixinSchema, AcademicTaskBase):
-    ...
+    class Config:
+        from_attributes = True

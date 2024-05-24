@@ -32,15 +32,4 @@ class EducationComponentModel(LoadDistributionBase, IdMixin, TimestampMixin):
     )
 
     def to_read_model(self) -> EducationComponentSchema:
-        return EducationComponentSchema(
-            id=self.id,
-            education_component_name=self.education_component_name,
-            education_component_code=self.education_component_code,
-            education_degree=self.education_degree,
-            credits=self.credits,
-            hours=self.hours,
-            department_id=str(self.department_id),
-            specialization_id=str(self.specialization_id),
-            created_at=self.created_at,
-            updated_at=self.updated_at
-        )
+        return EducationComponentSchema.from_orm(self)

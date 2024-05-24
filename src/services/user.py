@@ -33,7 +33,7 @@ class UserService:
                 if is_exists:
                     raise UserConflictException(f"User with email '{user.email}' already exists")
                 user.password = get_hashed_password(user.password)
-                user: UserSchema = await uow.users.add_one(data=user.model_dump())
+                user: UserSchema = await uow.users.create_one(data=user.model_dump())
                 await uow.commit()
                 return user
             except ConflictException:
