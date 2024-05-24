@@ -19,4 +19,5 @@ class StudyGroupUpdateSchema(StudyGroupBase):
 
 
 class StudyGroupSchema(TimestampMixinSchema, IdMixinSchema, StudyGroupBase):
-    ...
+    class Config:
+        from_attributes = True

@@ -21,13 +21,4 @@ class UserModel(LoadDistributionBase, IdMixin, TimestampMixin):
     department = relationship("DepartmentModel", back_populates="users")
 
     def to_read_model(self) -> UserSchema:
-        return UserSchema(
-            id=self.id,
-            username=self.username,
-            email=self.email,
-            password=self.password,
-            role=self.role,
-            department_id=str(self.department_id) if self.department_id else None,
-            created_at=self.created_at,
-            updated_at=self.updated_at
-        )
+        return UserSchema.from_orm(self)

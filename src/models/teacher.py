@@ -49,19 +49,4 @@ class TeacherModel(LoadDistributionBase, IdMixin, TimestampMixin):
     )
 
     def to_read_model(self) -> TeacherSchema:
-        return TeacherSchema(
-            id=self.id,
-            first_name=self.first_name,
-            last_name=self.last_name,
-            middle_name=self.middle_name,
-            position=self.position,
-            military_rank=self.military_rank,
-            academic_rank=self.academic_rank,
-            scientific_degree=self.scientific_degree,
-            years_of_service=self.years_of_service,
-            teacher_rate=self.teacher_rate,
-            is_civilian=self.is_civilian,
-            department_id=str(self.department_id),
-            created_at=self.created_at,
-            updated_at=self.updated_at
-        )
+        return TeacherSchema.from_orm(self)

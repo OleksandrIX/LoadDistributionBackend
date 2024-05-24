@@ -27,14 +27,4 @@ class AcademicHoursModel(LoadDistributionBase, IdMixin, TimestampMixin):
     )
 
     def to_read_model(self) -> AcademicHoursSchema:
-        return AcademicHoursSchema(
-            id=self.id,
-            amount_classroom_hours=self.amount_classroom_hours,
-            lecture_hours=self.lecture_hours,
-            group_hours=self.group_hours,
-            practical_hours=self.practical_hours,
-            self_study_hours=self.self_study_hours,
-            semester_id=str(self.semester_id),
-            created_at=self.created_at,
-            updated_at=self.updated_at
-        )
+        return AcademicHoursSchema.from_orm(self)

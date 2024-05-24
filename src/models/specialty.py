@@ -17,11 +17,4 @@ class SpecialtyModel(LoadDistributionBase, IdMixin, TimestampMixin):
     specializations = relationship("SpecializationModel", back_populates="specialty")
 
     def to_read_model(self) -> SpecialtySchema:
-        return SpecialtySchema(
-            id=self.id,
-            specialty_code=self.specialty_code,
-            specialty_name=self.specialty_name,
-            department_id=str(self.department_id),
-            created_at=self.created_at,
-            updated_at=self.updated_at,
-        )
+        return SpecialtySchema.from_orm(self)

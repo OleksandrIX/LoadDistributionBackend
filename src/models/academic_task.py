@@ -25,13 +25,4 @@ class AcademicTaskModel(LoadDistributionBase, IdMixin, TimestampMixin):
     )
 
     def to_read_model(self) -> AcademicTaskSchema:
-        return AcademicTaskSchema(
-            id=self.id,
-            term_papers=self.term_papers,
-            modular_control_works=self.modular_control_works,
-            essays=self.essays,
-            calculation_graphic_works=self.calculation_graphic_works,
-            semester_id=str(self.semester_id),
-            created_at=self.created_at,
-            updated_at=self.updated_at
-        )
+        return AcademicTaskSchema.from_orm(self)
