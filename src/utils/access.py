@@ -10,7 +10,7 @@ from ..schemas import UserSchema
 
 
 def has_access(user_department_id: str, department_id: str) -> bool:
-    return user_department_id == department_id
+    return str(user_department_id) == str(department_id)
 
 
 async def get_request_body(request: Request) -> dict:

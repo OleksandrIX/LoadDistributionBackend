@@ -3,13 +3,23 @@ from loguru import logger
 
 from ..schemas import TeacherSchema, TeacherCreateSchema, TeacherUpdateSchema
 from ..services import TeacherService
-from ..utils.dependencies import UOWDependencies, SecurityDependencies, AccessControlDependencies
+from ..utils.dependencies import UOWDependencies, SecurityDependencies, AdminDependencies, AccessControlDependencies
 
 router = APIRouter(
     prefix="/api/v1/teachers",
     tags=["Teachers"],
-    dependencies=[SecurityDependencies],
+    dependencies=[SecurityDependencies]
 )
+
+
+@router.get(
+    "",
+    response_model=list[TeacherSchema],
+    status_code=200,
+    dependencies=[AdminDependencies]
+)
+async def get_teachers(uow: UOWDependencies):
+    return await TeacherService.get_teachers(uow)
 
 
 @router.get(
