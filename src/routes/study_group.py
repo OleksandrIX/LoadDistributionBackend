@@ -3,7 +3,7 @@ from loguru import logger
 
 from ..schemas import StudyGroupSchema, StudyGroupCreateSchema, StudyGroupUpdateSchema
 from ..services import StudyGroupService
-from ..utils.dependencies import UOWDependencies, SecurityDependencies
+from ..utils.dependencies import UOWDependencies, SecurityDependencies, AdminDependencies
 
 router = APIRouter(
     prefix="/api/v1/study-groups",
@@ -15,7 +15,8 @@ router = APIRouter(
 @router.get(
     path="",
     response_model=list[StudyGroupSchema],
-    status_code=200
+    status_code=200,
+    dependencies=[AdminDependencies]
 )
 async def get_study_groups(uow: UOWDependencies) -> list[StudyGroupSchema]:
     return await StudyGroupService.get_study_groups(uow)
@@ -24,7 +25,8 @@ async def get_study_groups(uow: UOWDependencies) -> list[StudyGroupSchema]:
 @router.get(
     path="/{study_group_id}",
     response_model=StudyGroupSchema,
-    status_code=200
+    status_code=200,
+    dependencies=[AdminDependencies]
 )
 async def get_study_group_by_id(uow: UOWDependencies, study_group_id: str) -> StudyGroupSchema:
     return await StudyGroupService.get_study_group_by_id(uow, study_group_id)
@@ -33,7 +35,8 @@ async def get_study_group_by_id(uow: UOWDependencies, study_group_id: str) -> St
 @router.post(
     path="",
     response_model=str,
-    status_code=201
+    status_code=201,
+    dependencies=[AdminDependencies]
 )
 async def create_study_group(uow: UOWDependencies, study_group: StudyGroupCreateSchema) -> str:
     study_group_id = await StudyGroupService.create_study_group(uow, study_group)
@@ -44,7 +47,8 @@ async def create_study_group(uow: UOWDependencies, study_group: StudyGroupCreate
 @router.put(
     path="/{study_group_id}",
     response_model=StudyGroupSchema,
-    status_code=200
+    status_code=200,
+    dependencies=[AdminDependencies]
 )
 async def edit_study_group(uow: UOWDependencies,
                            study_group_id: str,
@@ -57,7 +61,8 @@ async def edit_study_group(uow: UOWDependencies,
 @router.delete(
     path="/{study_group_id}",
     response_model=None,
-    status_code=204
+    status_code=204,
+    dependencies=[AdminDependencies]
 )
 async def delete_study_group(uow: UOWDependencies, study_group_id: str) -> None:
     await StudyGroupService.delete_study_group(uow, study_group_id)

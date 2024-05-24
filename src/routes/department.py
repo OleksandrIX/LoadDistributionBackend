@@ -5,7 +5,7 @@ from ..schemas import (DepartmentSchema,
                        DepartmentCreateSchema,
                        DepartmentUpdateSchema,
                        DepartmentWithTeachersSchema,
-                       TeacherSchema)
+                       DepartmentWithEducationComponentsSchema)
 from ..services import DepartmentService
 from ..utils.dependencies import UOWDependencies, SecurityDependencies, AdminDependencies, AccessControlDependencies
 
@@ -37,6 +37,16 @@ async def get_departments(uow: UOWDependencies) -> list[DepartmentWithTeachersSc
 
 
 @router.get(
+    path="/education-components",
+    response_model=list[DepartmentWithEducationComponentsSchema],
+    status_code=200,
+    dependencies=[AdminDependencies]
+)
+async def get_department_by_id(uow: UOWDependencies) -> list[DepartmentWithEducationComponentsSchema]:
+    return await DepartmentService.get_department_with_education_components(uow)
+
+
+@router.get(
     path="/{department_id}",
     response_model=DepartmentSchema,
     status_code=200,
@@ -48,12 +58,22 @@ async def get_department_by_id(uow: UOWDependencies, department_id: str) -> Depa
 
 @router.get(
     path="/{department_id}/teachers",
-    response_model=list[TeacherSchema],
+    response_model=DepartmentWithTeachersSchema,
     status_code=200,
     dependencies=[AccessControlDependencies]
 )
-async def get_department_by_id(uow: UOWDependencies, department_id: str) -> list[TeacherSchema]:
-    return await DepartmentService.get_all_teachers_in_department_by_id(uow, department_id)
+async def get_department_by_id(uow: UOWDependencies, department_id: str) -> DepartmentWithTeachersSchema:
+    return await DepartmentService.get_deparment_by_id_with_teachers(uow, department_id)
+
+
+@router.get(
+    path="/{department_id}/education-components",
+    response_model=DepartmentWithEducationComponentsSchema,
+    status_code=200,
+    dependencies=[AccessControlDependencies]
+)
+async def get_department_by_id(uow: UOWDependencies, department_id: str) -> DepartmentWithEducationComponentsSchema:
+    return await DepartmentService.get_deparment_by_id_with_education_components(uow, department_id)
 
 
 @router.post(

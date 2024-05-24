@@ -14,7 +14,8 @@ from .curriculum import (CurriculumFileSchema,
 from .department import (DepartmentSchema,
                          DepartmentCreateSchema,
                          DepartmentUpdateSchema,
-                         DepartmentWithTeachersSchema)
+                         DepartmentWithTeachersSchema,
+                         DepartmentWithEducationComponentsSchema)
 from .education_component import (EducationComponentSchema,
                                   EducationComponentCreateSchema,
                                   EducationComponentUpdateSchema)
