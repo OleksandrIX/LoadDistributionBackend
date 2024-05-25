@@ -18,6 +18,7 @@ class EducationComponentModel(LoadDistributionBase, IdMixin, TimestampMixin):
                                    schema="load_distribution"), nullable=False)
     credits = Column(Numeric(5, 2), nullable=False)
     hours = Column(SmallInteger, nullable=False)
+    numbers_of_flows = Column(SmallInteger, nullable=False, default=0)
 
     department_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), nullable=False)
     specialization_id = Column(UUID(as_uuid=True), ForeignKey("specializations.id"), nullable=False)
