@@ -3,6 +3,9 @@ from uuid import UUID
 from pydantic import BaseModel, Field
 
 from .academic_workload import AcademicWorkloadSchema
+from .semester import SemesterSchema
+from .specialization import SpecializationSchema
+from .study_group import StudyGroupSchema
 from ..utils.schema import IdMixinSchema, TimestampMixinSchema, EducationDegreeEnum
 
 
@@ -31,3 +34,10 @@ class EducationComponentSchema(TimestampMixinSchema, IdMixinSchema, EducationCom
 
 class EducationComponenWithWorkloadSchema(EducationComponentSchema):
     academic_workloads: list[AcademicWorkloadSchema]
+
+
+class EducationComponentWithRelationships(EducationComponentSchema):
+    specialization: SpecializationSchema
+    semesters: list[SemesterSchema]
+    academic_workloads: list[AcademicWorkloadSchema]
+    study_groups: list[StudyGroupSchema]

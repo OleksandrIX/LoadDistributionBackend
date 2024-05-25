@@ -1,5 +1,7 @@
 from sqlalchemy import Column, Enum, String, SmallInteger, UniqueConstraint, CheckConstraint
+from sqlalchemy.orm import relationship
 
+from .many_to_many_tables import EducationComponentsStudyGroupsModel
 from ..schemas import StudyGroupSchema
 from ..utils.database import LoadDistributionBase
 from ..utils.model import IdMixin, TimestampMixin, education_degree_enum_agrs
@@ -14,6 +16,13 @@ class StudyGroupModel(LoadDistributionBase, IdMixin, TimestampMixin):
                                    name="education_degree_enum",
                                    schema="load_distribution"), nullable=False)
     number_listeners = Column(SmallInteger, nullable=False)
+
+    education_components = relationship(
+        "EducationComponentModel",
+        secondary=EducationComponentsStudyGroupsModel.__table__,
+        back_populates="study_groups",
+        lazy="selectin"
+    )
 
     __table_args__ = (
         UniqueConstraint("group_code", "course_study", name="group_unique_constraint"),

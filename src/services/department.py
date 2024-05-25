@@ -3,7 +3,8 @@ from ..exceptions import DepartmentNotFoundException, DepartmentConflictExceptio
 from ..schemas import (DepartmentSchema,
                        DepartmentCreateSchema,
                        DepartmentWithTeachersSchema,
-                       DepartmentWithEducationComponentsSchema)
+                       DepartmentWithEducationComponentsSchema,
+                       DepartmentWithRelationships)
 from ..utils.unit_of_work import IUnitOfWork
 
 
@@ -14,14 +15,23 @@ class DepartmentService:
             return await uow.departments.get_all()
 
     @staticmethod
-    async def get_department_with_teachers(uow: IUnitOfWork) -> list[DepartmentWithTeachersSchema]:
+    async def get_departments_with_teachers(uow: IUnitOfWork) -> list[DepartmentWithTeachersSchema]:
         async with uow:
             return await uow.departments.get_all_with_teachers()
 
     @staticmethod
-    async def get_department_with_education_components(uow: IUnitOfWork) -> list[DepartmentWithEducationComponentsSchema]:
+    async def get_departments_with_education_components(
+            uow: IUnitOfWork
+    ) -> list[DepartmentWithEducationComponentsSchema]:
         async with uow:
             return await uow.departments.get_all_with_education_components()
+
+    @staticmethod
+    async def get_departments_with_relationships(
+            uow: IUnitOfWork
+    ) -> list[DepartmentWithRelationships]:
+        async with uow:
+            return await uow.departments.get_all_with_relationships()
 
     @staticmethod
     async def get_department_by_id(uow: IUnitOfWork, department_id: str) -> DepartmentSchema:
@@ -53,6 +63,18 @@ class DepartmentService:
             if not is_exists:
                 raise DepartmentNotFoundException(department_id)
             department = await uow.departments.get_department_by_id_with_education_components(department_id)
+            return department
+
+    @staticmethod
+    async def get_deparment_by_id_with_relationships(
+            uow: IUnitOfWork,
+            department_id: str
+    ) -> DepartmentWithEducationComponentsSchema:
+        async with uow:
+            is_exists = await uow.departments.is_exists(id=department_id)
+            if not is_exists:
+                raise DepartmentNotFoundException(department_id)
+            department = await uow.departments.get_department_by_id_with_relationships(department_id)
             return department
 
     @staticmethod

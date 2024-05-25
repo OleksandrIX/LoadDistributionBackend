@@ -13,8 +13,17 @@ class SpecializationModel(LoadDistributionBase, IdMixin, TimestampMixin):
     specialization_name = Column(String(255), nullable=False)
     specialty_id = Column(UUID(as_uuid=True), ForeignKey("specialties.id"), nullable=False)
 
-    specialty = relationship("SpecialtyModel", back_populates="specializations")
-    education_components = relationship("EducationComponentModel", back_populates="specialization")
+    specialty = relationship(
+        argument="SpecialtyModel",
+        back_populates="specializations",
+        lazy="selectin"
+    )
+
+    education_components = relationship(
+        argument="EducationComponentModel",
+        back_populates="specialization",
+        lazy="selectin"
+    )
 
     def to_read_model(self) -> SpecializationSchema:
         return SpecializationSchema.from_orm(self)

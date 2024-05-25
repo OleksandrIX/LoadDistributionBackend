@@ -1,7 +1,10 @@
 from sqlalchemy import Column, String, SmallInteger, CheckConstraint
 from sqlalchemy.orm import relationship
 
-from ..schemas import DepartmentSchema, DepartmentWithTeachersSchema, DepartmentWithEducationComponentsSchema
+from ..schemas import (DepartmentSchema,
+                       DepartmentWithTeachersSchema,
+                       DepartmentWithEducationComponentsSchema,
+                       DepartmentWithRelationships)
 from ..utils.database import LoadDistributionBase
 from ..utils.model import IdMixin, TimestampMixin
 
@@ -27,3 +30,6 @@ class DepartmentModel(LoadDistributionBase, IdMixin, TimestampMixin):
 
     def to_read_model_with_education_components(self) -> DepartmentWithEducationComponentsSchema:
         return DepartmentWithEducationComponentsSchema.from_orm(self)
+
+    def to_read_model_with_relationships(self) -> DepartmentWithRelationships:
+        return DepartmentWithRelationships.from_orm(self)

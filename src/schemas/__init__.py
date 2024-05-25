@@ -18,7 +18,8 @@ from .department import (DepartmentSchema,
                          DepartmentCreateSchema,
                          DepartmentUpdateSchema,
                          DepartmentWithTeachersSchema,
-                         DepartmentWithEducationComponentsSchema)
+                         DepartmentWithEducationComponentsSchema,
+                         DepartmentWithRelationships)
 from .education_component import (EducationComponentSchema,
                                   EducationComponentCreateSchema,
                                   EducationComponentUpdateSchema,

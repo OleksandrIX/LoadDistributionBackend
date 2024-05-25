@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
+from .education_component import EducationComponentSchema, EducationComponentWithRelationships
 from .teacher import TeacherSchema
-from .education_component import EducationComponentSchema
 from ..utils.schema import IdMixinSchema, TimestampMixinSchema
 
 
@@ -29,3 +29,7 @@ class DepartmentWithTeachersSchema(DepartmentSchema):
 
 class DepartmentWithEducationComponentsSchema(DepartmentSchema):
     education_components: list[EducationComponentSchema]
+
+
+class DepartmentWithRelationships(DepartmentSchema):
+    education_components: list[EducationComponentWithRelationships]
