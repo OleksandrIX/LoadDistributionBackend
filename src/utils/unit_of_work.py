@@ -19,6 +19,8 @@ class IUnitOfWork(ABC):
     education_components_study_groups: Type[EducationComponentsStudyGroupsRepository]
     users: Type[UserRepository]
     teachers: Type[TeacherRepository]
+    academic_workload: Type[AcademicWorkloadRepository]
+    academic_workload_formula: Type[AcademicWorkloadFormulaRepository]
 
     @abstractmethod
     def __init__(self):
@@ -60,6 +62,8 @@ class UnitOfWork:
         self.education_components_study_groups = EducationComponentsStudyGroupsRepository(self.session)
         self.users = UserRepository(self.session)
         self.teachers = TeacherRepository(self.session)
+        self.academic_workload = AcademicWorkloadRepository(self.session)
+        self.academic_workload_formula = AcademicWorkloadFormulaRepository(self.session)
 
     async def __aexit__(self, *args):
         await self.rollback()

@@ -80,7 +80,7 @@ async def access_control(
     resource = path_parts[3]
 
     match resource:
-        case "departments":
+        case "departments" | "calculation-academic-workload":
             department_id = request.path_params.get("department_id")
             is_accessible = has_access(user_department_id, department_id) if department_id else False
         case "teachers":
