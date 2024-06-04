@@ -1,6 +1,7 @@
 from .academic_hours import router as academic_hours_router
 from .academic_task import router as academic_task_router
 from .auth import router as auth_router
+from .calculation_academic_workload import router as calculation_academic_workload_router
 from .curriculum import router as curriculum_router
 from .department import router as department_router
 from .education_component import router as education_component_router
@@ -23,5 +24,6 @@ all_routers = [
     semester_router,
     academic_hours_router,
     academic_task_router,
-    curriculum_router
+    curriculum_router,
+    calculation_academic_workload_router
 ]
