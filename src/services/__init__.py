@@ -1,5 +1,6 @@
 from .academic_hours import AcademicHoursService
 from .academic_task import AcademicTaskService
+from .calculation_academic_workload import CalculationAcademicWorkloadService
 from .curriculum import CurriculumService
 from .department import DepartmentService
 from .education_component import EducationComponentService

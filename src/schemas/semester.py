@@ -3,6 +3,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
+from .academic_hours import AcademicHoursSchema
+from .academic_task import AcademicTaskSchema
 from ..utils.schema import IdMixinSchema, TimestampMixinSchema, ReportingTypeEnum
 
 
@@ -24,3 +26,8 @@ class SemesterUpdateSchema(SemesterBase):
 class SemesterSchema(TimestampMixinSchema, IdMixinSchema, SemesterBase):
     class Config:
         from_attributes = True
+
+
+class SemesterWithAcademicDataSchema(SemesterSchema):
+    academic_hours: AcademicHoursSchema
+    academic_task: AcademicTaskSchema
