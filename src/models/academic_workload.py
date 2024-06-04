@@ -24,7 +24,7 @@ class AcademicWorkloadModel(LoadDistributionBase, IdMixin, TimestampMixin):
     qualification_works_defense_conducting_hours = Column(Numeric(8, 4), nullable=False)
     complex_exams_conducting_hours = Column(Numeric(8, 4), nullable=False)
     other_types_conducting_hours = Column(Numeric(8, 4), nullable=False)
-
+    semester_number = Column(SmallInteger, nullable=False)
     education_component_id = Column(UUID(as_uuid=True), ForeignKey("education_components.id"), nullable=False)
     teacher_id = Column(UUID(as_uuid=True), ForeignKey("teachers.id"), nullable=False)
 

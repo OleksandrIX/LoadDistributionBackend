@@ -1,6 +1,7 @@
 from .academic_hours import AcademicHoursModel
 from .academic_task import AcademicTaskModel
 from .academic_workload import AcademicWorkloadModel
+from .academic_workload_formula import AcademicWorkloadFormulaModel
 from .department import DepartmentModel
 from .education_component import EducationComponentModel
 from .many_to_many_tables import EducationComponentsStudyGroupsModel

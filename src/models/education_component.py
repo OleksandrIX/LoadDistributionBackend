@@ -3,7 +3,9 @@ from sqlalchemy.orm import relationship
 
 from .many_to_many_tables import EducationComponentsStudyGroupsModel
 
-from ..schemas import EducationComponentSchema, EducationComponenWithWorkloadSchema
+from ..schemas import (EducationComponentSchema,
+                       EducationComponenWithWorkloadSchema,
+                       EducationComponentWithAcademicDataSchema)
 from ..utils.database import LoadDistributionBase
 from ..utils.model import IdMixin, TimestampMixin, education_degree_enum_agrs
 
@@ -65,3 +67,6 @@ class EducationComponentModel(LoadDistributionBase, IdMixin, TimestampMixin):
 
     def to_read_model_with_workload(self) -> EducationComponenWithWorkloadSchema:
         return EducationComponenWithWorkloadSchema.from_orm(self)
+
+    def to_read_model_with_academic_data(self):
+        return EducationComponentWithAcademicDataSchema.from_orm(self)
