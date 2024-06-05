@@ -4,6 +4,7 @@ from .auth import router as auth_router
 from .calculation_academic_workload import router as calculation_academic_workload_router
 from .curriculum import router as curriculum_router
 from .department import router as department_router
+from .discipline import router as discipline_router
 from .education_component import router as education_component_router
 from .semester import router as semester_router
 from .specialization import router as specialization_router
@@ -17,6 +18,7 @@ all_routers = [
     user_router,
     teacher_router,
     department_router,
+    discipline_router,
     specialty_router,
     specialization_router,
     education_component_router,

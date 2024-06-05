@@ -11,3 +11,4 @@ from .specialty import SpecialtyRepository
 from .study_group import StudyGroupRepository
 from .teacher import TeacherRepository
 from .user import UserRepository
+from .discipline import DisciplineRepository

@@ -1,73 +1,71 @@
-from loguru import logger
+from functools import reduce
 
-from ..schemas import (TeacherSchema,
-                       EducationComponentWithAcademicDataSchema,
-                       AcademicWorkloadFormulaSchema,
+from ..exceptions import DisciplineNotFoundException, AcademicWorkloadConflictException
+from ..schemas import (DisciplineWithRelationships,
+                       WorkloadFormulaSchema,
                        AcademicWorkloadCreateSchema)
-from ..exceptions import TeacherNotFoundException, EducationComponentNotFoundException
+from ..utils.calculation_workload import (calculate_hours,
+                                          calculation_workload,
+                                          convert_to_education_components_per_course)
 from ..utils.unit_of_work import IUnitOfWork
-
-calculation_workload_formulas = {
-    "calculation_lecture_hours": "hours = lecture_hours * number_of_flows",
-    "calculation_group_hours": "hours = group_hours * number_of_groups",
-    "calculation_practical_hours": "hours = practical_hours * number_of_groups * 2"
-}
-
-
-def calculate_hours(formula, **kwargs):
-    locals().update(**kwargs)
-    exec(formula)
-    return locals().get("hours")
 
 
 class CalculationAcademicWorkloadService:
     @staticmethod
-    async def calculation_classroom_workload(
+    async def calculation_workload_for_discipline(
             uow: IUnitOfWork,
-            teacher_id: str,
-            disciplines_id: list[str],
+            discipline_id: str
     ):
-        lecture_hours = 10,
-        group_hours = 20,
-        practical_hours = 40,
-        number_of_flows = 1,
-        number_of_groups = 3,
         async with (uow):
-            teacher: TeacherSchema = await uow.teachers.get_one(id=teacher_id)
-            if not teacher:
-                raise TeacherNotFoundException(teacher_id)
-            response = {
-                "teacher": teacher,
-                "academic_workloads": []
-            }
-            formulas: list[AcademicWorkloadFormulaSchema] = await uow.academic_workload_formula.get_all()
-            for discipline_id in disciplines_id:
-                education_component: EducationComponentWithAcademicDataSchema = await uow.education_components.get_education_component_by_id_with_academic_data(
-                    id=discipline_id)
-                if not education_component:
-                    raise EducationComponentNotFoundException(discipline_id)
+            academic_workload: AcademicWorkloadCreateSchema = AcademicWorkloadCreateSchema(
+                discipline_id=discipline_id
+            )
 
-                for semester in education_component.semesters:
-                    academic_workload = AcademicWorkloadCreateSchema(
-                        teacher_id=teacher_id,
-                        education_component_id=discipline_id,
-                        semester_number=semester.semester_number
-                    )
+            formulas: list[WorkloadFormulaSchema] = await uow.academic_workload_formula.get_all()
+            formulas_dict: dict = {formula.workload_name: formula.formula for formula in formulas}
 
-                    # for formula in formulas:
-                    #     setattr(
-                    #         academic_workload,
-                    #         formula.workload_name,
-                    #         calculate_hours(
-                    #             formula.formula,
-                    #             education_component
-                    #             lecture_hours=semester.academic_hours.lecture_hours,
-                    #             group_hours=semester.academic_hours.group_hours,
-                    #             practical_hours=semester.academic_hours.practical_hours,
-                    #         )
-                    #     )
-                    logger.debug(academic_workload)
-                    response.get("academic_workloads").append(academic_workload)
-            # saved_academic_workload = await uow.academic_workload.create_one(data=academic_workload.model_dump())
-            # return saved_academic_workload
-            return response
+            discipline: DisciplineWithRelationships = await uow.disciplines.get_one(id=discipline_id)
+            if not discipline:
+                raise DisciplineNotFoundException(discipline_id)
+
+            education_components_per_course = convert_to_education_components_per_course(discipline)
+
+            for course_study, education_component_per_course in education_components_per_course.items():
+                study_groups = [
+                    study_group
+                    for education_component in education_component_per_course
+                    for study_group in education_component.study_groups
+                ]
+
+                total_listeners = reduce(lambda x, y: x + y, [
+                    study_group.number_listeners
+                    for study_group in study_groups
+                ])
+
+                numbers_of_flows = total_listeners // 80
+                lecture_hourse = education_component_per_course[0].semesters[0].academic_hours.lecture_hours
+                academic_workload.lecture_hours += calculate_hours(
+                    formula=formulas_dict["lecture_hours"],
+                    lecture_hours=lecture_hourse,
+                    numbers_of_flows=numbers_of_flows,
+                )
+
+                for education_component in education_component_per_course:
+                    calculation_workload(academic_workload, education_component, formulas_dict)
+
+                academic_workload.consultation_hours = calculate_hours(
+                    formula=formulas_dict["consultation_hours"],
+                    number_of_groups=len(study_groups),
+                    **academic_workload.model_dump()
+                )
+
+            is_exists = await uow.academic_workload.is_exists(
+                **academic_workload.model_dump()
+            )
+
+            if is_exists:
+                raise AcademicWorkloadConflictException()
+
+            saved_academic_workload = await uow.academic_workload.create_one(data=academic_workload.model_dump())
+            await uow.commit()
+        return saved_academic_workload

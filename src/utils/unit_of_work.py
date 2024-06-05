@@ -9,6 +9,7 @@ from ..repositories import *
 
 class IUnitOfWork(ABC):
     departments: Type[DepartmentRepository]
+    disciplines: Type[DisciplineRepository]
     specialties: Type[SpecialtyRepository]
     specializations: Type[SpecializationRepository]
     education_components: Type[EducationComponentRepository]
@@ -52,6 +53,7 @@ class UnitOfWork:
         self.session: AsyncSession = self.session_factory()
 
         self.departments = DepartmentRepository(self.session)
+        self.disciplines = DisciplineRepository(self.session)
         self.specialties = SpecialtyRepository(self.session)
         self.specializations = SpecializationRepository(self.session)
         self.education_components = EducationComponentRepository(self.session)

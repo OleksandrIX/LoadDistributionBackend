@@ -3,6 +3,7 @@ from uuid import UUID
 from pydantic import BaseModel, Field
 
 from .education_component import EducationComponentWithRelationships
+from .academic_workload import AcademicWorkloadSchema
 from ..utils.schema import IdMixinSchema, TimestampMixinSchema
 
 
@@ -27,4 +28,5 @@ class DisciplineSchema(TimestampMixinSchema, IdMixinSchema, DisciplineBase):
 
 
 class DisciplineWithRelationships(DisciplineSchema):
+    academic_workloads: list[AcademicWorkloadSchema]
     education_components: list[EducationComponentWithRelationships]

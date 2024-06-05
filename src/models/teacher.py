@@ -37,7 +37,7 @@ class TeacherModel(LoadDistributionBase, IdMixin, TimestampMixin):
 
     department = relationship("DepartmentModel", back_populates="teachers")
     academic_workloads = relationship(
-        argument="AcademicWorkloadModel",
+        argument="AcademicWorkloadTeacherModel",
         back_populates="teacher",
         lazy="selectin"
     )

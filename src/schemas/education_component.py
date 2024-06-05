@@ -3,20 +3,18 @@ from uuid import UUID
 from pydantic import BaseModel, Field
 
 from .academic_workload import AcademicWorkloadSchema
-from .semester import SemesterSchema, SemesterWithAcademicDataSchema
+from .semester import SemesterWithAcademicDataSchema
 from .specialization import SpecializationSchema
 from .study_group import StudyGroupSchema
 from ..utils.schema import IdMixinSchema, TimestampMixinSchema, EducationDegreeEnum
 
 
 class EducationComponentBase(BaseModel):
-    education_component_name: str = Field(..., max_length=255)
     education_component_code: str = Field(..., max_length=30)
     education_degree: EducationDegreeEnum
-    credits: float = Field(..., gt=0, le=100)
-    hours: int = Field(..., ge=1, le=1000)
+    course_study: int = Field(..., ge=1, le=10)
     numbers_of_flows: int = Field(0, ge=0, le=50)
-    department_id: UUID
+    discipline_id: UUID
     specialization_id: UUID
 
 
@@ -37,12 +35,12 @@ class EducationComponenWithWorkloadSchema(EducationComponentSchema):
     academic_workloads: list[AcademicWorkloadSchema]
 
 
-class EducationComponentWithAcademicDataSchema(EducationComponentSchema):
+class ECWithAcademicDataSchema(EducationComponentSchema):
     semesters: list[SemesterWithAcademicDataSchema]
+    study_groups: list[StudyGroupSchema]
 
 
 class EducationComponentWithRelationships(EducationComponentSchema):
     specialization: SpecializationSchema
-    semesters: list[SemesterSchema]
-    academic_workloads: list[AcademicWorkloadSchema]
+    semesters: list[SemesterWithAcademicDataSchema]
     study_groups: list[StudyGroupSchema]

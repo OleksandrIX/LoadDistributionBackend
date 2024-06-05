@@ -27,5 +27,11 @@ class DisciplineModel(LoadDistributionBase, IdMixin, TimestampMixin):
         lazy="selectin"
     )
 
+    academic_workloads = relationship(
+        argument="AcademicWorkloadModel",
+        back_populates="discipline",
+        lazy="selectin"
+    )
+
     def to_read_model(self) -> DisciplineWithRelationships:
         return DisciplineWithRelationships.from_orm(self)

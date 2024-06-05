@@ -35,7 +35,7 @@ async def get_education_components(
         uow: UOWDependencies,
         education_component_id: str
 ) -> EducationComponenWithWorkloadSchema:
-    return await EducationComponentService.get_education_component_by_id_with_workload(uow, education_component_id)
+    return await EducationComponentService.get_education_component_with_workload(uow, education_component_id)
 
 
 @router.get(

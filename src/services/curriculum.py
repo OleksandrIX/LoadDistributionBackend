@@ -1,18 +1,18 @@
 import io
 
-from minio import Minio, S3Error
-from loguru import logger
 from fastapi import UploadFile
 from fastapi.responses import StreamingResponse
+from loguru import logger
+from minio import Minio, S3Error
 
 from modules.curriculum_parser import processing_of_curriculum
-
-from ..schemas import *
+from .calculation_academic_workload import CalculationAcademicWorkloadService
 from ..config import minio_settings
-from ..exceptions import CurriculumNotFoundException
-from ..utils.unit_of_work import IUnitOfWork
+from ..exceptions import CurriculumNotFoundException, AcademicWorkloadConflictException
+from ..schemas import *
 from ..utils.curriculum import (get_curriculum_spreadsheet_block_data,
                                 get_current_semester_from_course_and_semester_number)
+from ..utils.unit_of_work import IUnitOfWork
 
 
 class CurriculumService:
@@ -130,8 +130,7 @@ class CurriculumService:
 
     @staticmethod
     async def save_curriculum_data(uow: IUnitOfWork,
-                                   curriculum_spreadsheet_blocks: list[CurriculumSpreadsheetBlockSchema]) -> list[str]:
-        education_components = []
+                                   curriculum_spreadsheet_blocks: list[CurriculumSpreadsheetBlockSchema]):
         for spreadsheet_block in curriculum_spreadsheet_blocks:
             block_data = get_curriculum_spreadsheet_block_data(spreadsheet_block)
 
@@ -150,23 +149,35 @@ class CurriculumService:
                         logger.warning(f"Specialization with name {block_data.specialization_name} not found")
                         continue
 
+                    discipline: DisciplineSchema = await uow.disciplines.get_one(
+                        discipline_name=ec_schema.education_component_name.strip()
+                    )
+
+                    if not discipline:
+                        discipline: DisciplineSchema = await uow.disciplines.create_one(
+                            data=DisciplineCreateSchema(
+                                discipline_name=ec_schema.education_component_name.strip(),
+                                credits=ec_schema.credits,
+                                hours=ec_schema.hours,
+                                department_id=department.id,
+                            ).model_dump()
+                        )
+
                     education_component: EducationComponentSchema = await uow.education_components.get_one(
                         education_component_code=ec_schema.education_component_code.strip(),
-                        education_component_name=ec_schema.education_component_name.strip(),
                         education_degree=block_data.education_degree,
-                        department_id=str(department.id),
+                        course_study=block_data.course_study,
+                        discipline_id=str(discipline.id),
                         specialization_id=str(specialization.id)
                     )
 
                     if not education_component:
                         education_component: EducationComponentSchema = await uow.education_components.create_one(
                             data=EducationComponentCreateSchema(
-                                education_component_name=ec_schema.education_component_name.strip(),
                                 education_component_code=ec_schema.education_component_code.strip(),
                                 education_degree=block_data.education_degree,
-                                credits=ec_schema.credits,
-                                hours=ec_schema.hours,
-                                department_id=str(department.id),
+                                course_study=block_data.course_study,
+                                discipline_id=str(discipline.id),
                                 specialization_id=str(specialization.id)
                             ).model_dump()
                         )
@@ -208,7 +219,6 @@ class CurriculumService:
                             )
 
                         logger.success(f"Created education component with id '{education_component.id}'")
-                        education_components.append(str(education_component.id))
 
                     for group_code, number_listeners in block_data.study_groups:
                         study_group: StudyGroupSchema = await uow.study_groups.get_one(group_code=group_code)
@@ -236,9 +246,14 @@ class CurriculumService:
                                     study_group_id=str(study_group.id)
                                 ).model_dump()
                             )
+
                     await uow.commit()
 
-        return education_components
+        async with uow:
+            disciplines: list = await uow.disciplines.get_all_disciplines_id()
+            for discipline_id in disciplines:
+                await CalculationAcademicWorkloadService.calculation_workload_for_discipline(uow, discipline_id)
+            await uow.commit()
 
     async def delete_curriculum_file(self, filename: str):
         try:

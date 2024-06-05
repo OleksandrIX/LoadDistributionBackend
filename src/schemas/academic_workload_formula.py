@@ -3,20 +3,20 @@ from pydantic import BaseModel
 from ..utils.schema import IdMixinSchema
 
 
-class AcademicWorkloadFormulaBase(BaseModel):
+class WorkloadFormulaBase(BaseModel):
     description: str
     workload_name: str
     formula: str
 
 
-class AcademicWorkloadFormulaCreateSchema(AcademicWorkloadFormulaBase):
+class WorkloadFormulaCreateSchema(WorkloadFormulaBase):
     ...
 
 
-class AcademicWorkloadFormulaUpdateSchema(AcademicWorkloadFormulaBase):
+class WorkloadFormulaUpdateSchema(WorkloadFormulaBase):
     ...
 
 
-class AcademicWorkloadFormulaSchema(IdMixinSchema, AcademicWorkloadFormulaBase):
+class WorkloadFormulaSchema(IdMixinSchema, WorkloadFormulaBase):
     class Config:
         from_attributes = True

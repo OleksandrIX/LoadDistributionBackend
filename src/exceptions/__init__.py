@@ -8,7 +8,8 @@ from .conflict import (ConflictException,
                        AcademicHoursConflictException,
                        AcademicTaskConflictException,
                        UserConflictException,
-                       TeacherConflictException)
+                       TeacherConflictException,
+                       AcademicWorkloadConflictException)
 from .exception import ClientException, UnauthorizedException, ForbiddenException
 from .not_found import (NotFoundException,
                         DepartmentNotFoundException,
@@ -22,4 +23,5 @@ from .not_found import (NotFoundException,
                         CurriculumNotFoundException,
                         UserByUsernameNotFoundException,
                         UserByIdNotFoundException,
-                        TeacherNotFoundException)
+                        TeacherNotFoundException,
+                        DisciplineNotFoundException)

@@ -10,3 +10,4 @@ from .specialty import SpecialtyService
 from .study_group import StudyGroupService
 from .teacher import TeacherService
 from .user import UserService
+from .discipline import DisciplineService

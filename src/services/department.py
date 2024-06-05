@@ -3,7 +3,7 @@ from ..exceptions import DepartmentNotFoundException, DepartmentConflictExceptio
 from ..schemas import (DepartmentSchema,
                        DepartmentCreateSchema,
                        DepartmentWithTeachersSchema,
-                       DepartmentWithEducationComponentsSchema,
+                       DepartmentWithDisciplines,
                        DepartmentWithRelationships)
 from ..utils.unit_of_work import IUnitOfWork
 
@@ -22,7 +22,7 @@ class DepartmentService:
     @staticmethod
     async def get_departments_with_education_components(
             uow: IUnitOfWork
-    ) -> list[DepartmentWithEducationComponentsSchema]:
+    ) -> list[DepartmentWithDisciplines]:
         async with uow:
             return await uow.departments.get_all_with_education_components()
 
@@ -57,7 +57,7 @@ class DepartmentService:
     async def get_deparment_by_id_with_education_components(
             uow: IUnitOfWork,
             department_id: str
-    ) -> DepartmentWithEducationComponentsSchema:
+    ) -> DepartmentWithDisciplines:
         async with uow:
             is_exists = await uow.departments.is_exists(id=department_id)
             if not is_exists:
@@ -69,7 +69,7 @@ class DepartmentService:
     async def get_deparment_by_id_with_relationships(
             uow: IUnitOfWork,
             department_id: str
-    ) -> DepartmentWithEducationComponentsSchema:
+    ) -> DepartmentWithDisciplines:
         async with uow:
             is_exists = await uow.departments.is_exists(id=department_id)
             if not is_exists:

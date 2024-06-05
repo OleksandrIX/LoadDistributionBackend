@@ -22,7 +22,7 @@ class EducationComponentService:
             return education_component
 
     @staticmethod
-    async def get_education_component_by_id_with_workload(
+    async def get_education_component_with_workload(
             uow: IUnitOfWork,
             education_component_id: str
     ) -> EducationComponenWithWorkloadSchema:
@@ -30,7 +30,7 @@ class EducationComponentService:
             is_exists = await uow.education_components.is_exists(id=education_component_id)
             if not is_exists:
                 raise EducationComponentNotFoundException(education_component_id)
-            education_component = await uow.education_components.get_education_component_by_id_with_workload(
+            education_component = await uow.education_components.get_education_component_with_workload(
                 education_component_id=education_component_id
             )
             return education_component
