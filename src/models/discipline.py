@@ -14,23 +14,31 @@ class DisciplineModel(LoadDistributionBase, IdMixin, TimestampMixin):
     hours = Column(SmallInteger, nullable=False)
 
     department_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), nullable=False)
+    academic_workload_id = Column(UUID(as_uuid=True), ForeignKey("academic_workloads.id"), nullable=False)
 
     department = relationship(
         argument="DepartmentModel",
         back_populates="disciplines",
-        lazy="selectin"
+        lazy="selectin",
     )
 
     education_components = relationship(
         argument="EducationComponentModel",
         back_populates="discipline",
-        lazy="selectin"
+        lazy="selectin",
     )
 
-    academic_workloads = relationship(
+    academic_workload = relationship(
         argument="AcademicWorkloadModel",
         back_populates="discipline",
-        lazy="selectin"
+        lazy="selectin",
+        uselist=False,
+    )
+
+    academic_workload_teacher = relationship(
+        argument="AcademicWorkloadTeacherModel",
+        back_populates="discipline",
+        lazy="selectin",
     )
 
     def to_read_model(self) -> DisciplineWithRelationships:

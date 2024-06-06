@@ -11,7 +11,8 @@ class DisciplineBase(BaseModel):
     discipline_name: str = Field(...)
     credits: float = Field(..., gt=0, le=100)
     hours: int = Field(..., ge=1, le=1000)
-    department_id: UUID
+    department_id: UUID = Field(...)
+    academic_workload_id: UUID = Field(...)
 
 
 class DisciplineCreateSchema(DisciplineBase):
@@ -28,5 +29,5 @@ class DisciplineSchema(TimestampMixinSchema, IdMixinSchema, DisciplineBase):
 
 
 class DisciplineWithRelationships(DisciplineSchema):
-    academic_workloads: list[AcademicWorkloadSchema]
+    academic_workload: AcademicWorkloadSchema
     education_components: list[EducationComponentWithRelationships]

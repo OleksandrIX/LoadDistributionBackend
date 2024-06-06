@@ -10,6 +10,7 @@ from ..utils.schema import IdMixinSchema, TimestampMixinSchema
 class AcademicWorkloadTeacherBase(BaseModel):
     semester_number: int = Field(..., ge=1, le=8)
     academic_workload_id: UUID = Field(...)
+    discipline_id: UUID = Field(...)
     teacher_id: UUID = Field(...)
 
 

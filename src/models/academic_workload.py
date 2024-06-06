@@ -24,12 +24,12 @@ class AcademicWorkloadModel(LoadDistributionBase, IdMixin, TimestampMixin):
     qualification_works_defense_conducting_hours = Column(Numeric(8, 4), nullable=False)
     complex_exams_conducting_hours = Column(Numeric(8, 4), nullable=False)
     other_types_conducting_hours = Column(Numeric(8, 4), nullable=False)
-    discipline_id = Column(UUID(as_uuid=True), ForeignKey("disciplines.id"), nullable=False)
 
     discipline = relationship(
         argument="DisciplineModel",
-        back_populates="academic_workloads",
-        lazy="selectin"
+        back_populates="academic_workload",
+        lazy="selectin",
+        uselist=False,
     )
 
     academic_workload_teacher = relationship(

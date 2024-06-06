@@ -1,5 +1,3 @@
-from uuid import UUID
-
 from pydantic import BaseModel, Field
 
 from ..utils.schema import IdMixinSchema, TimestampMixinSchema
@@ -21,7 +19,6 @@ class AcademicWorkloadBase(BaseModel):
     qualification_works_defense_conducting_hours: float = Field(0.0, ge=0.0, le=10000.0)
     complex_exams_conducting_hours: float = Field(0.0, ge=0.0, le=10000.0)
     other_types_conducting_hours: float = Field(0.0, ge=0.0, le=10000.0)
-    discipline_id: UUID = Field(...)
 
 
 class AcademicWorkloadCreateSchema(AcademicWorkloadBase):

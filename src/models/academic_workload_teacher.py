@@ -11,10 +11,17 @@ class AcademicWorkloadTeacherModel(LoadDistributionBase, IdMixin, TimestampMixin
 
     semester_number = Column(SmallInteger, nullable=False)
     academic_workload_id = Column(UUID(as_uuid=True), ForeignKey("academic_workloads.id"), nullable=False)
+    discipline_id = Column(UUID(as_uuid=True), ForeignKey("disciplines.id"), nullable=False)
     teacher_id = Column(UUID(as_uuid=True), ForeignKey("teachers.id"), nullable=False)
 
     academic_workload = relationship(
         argument="AcademicWorkloadModel",
+        back_populates="academic_workload_teacher",
+        lazy="selectin"
+    )
+
+    discipline = relationship(
+        argument="DisciplineModel",
         back_populates="academic_workload_teacher",
         lazy="selectin"
     )
