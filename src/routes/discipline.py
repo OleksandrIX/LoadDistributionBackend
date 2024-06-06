@@ -1,8 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 
 from ..schemas import DisciplineWithRelationships
 from ..services import DisciplineService
 from ..utils.dependencies import UOWDependencies, SecurityDependencies, AdminDependencies, AccessControlDependencies
+from ..utils.security import get_current_user
 
 router = APIRouter(
     prefix="/api/v1/disciplines",
@@ -15,10 +16,10 @@ router = APIRouter(
     "",
     response_model=list[DisciplineWithRelationships],
     status_code=200,
-    dependencies=[AdminDependencies]
 )
-async def get_disciplines(uow: UOWDependencies) -> list[DisciplineWithRelationships]:
-    return await DisciplineService.get_disciplines(uow)
+async def get_disciplines(request: Request, uow: UOWDependencies) -> list[DisciplineWithRelationships]:
+    user = await get_current_user(request, uow)
+    return await DisciplineService.get_disciplines(uow, user)
 
 
 @router.get(

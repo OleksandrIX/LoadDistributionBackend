@@ -42,6 +42,28 @@ async def check_access_to_teachers(
         return has_access(user_department_id, department_id) if department_id else False
 
 
+async def check_access_to_discipline(
+        request: Request,
+        body: dict,
+        user_department_id: str,
+        uow: IUnitOfWork,
+        discipline_id: str = None
+) -> bool:
+    from ..services import DisciplineService
+
+    discipline_id = discipline_id or request.path_params.get("discipline_id")
+    department_id = body.get("department_id")
+
+    if discipline_id:
+        if department_id:
+            return has_access(user_department_id, department_id)
+        else:
+            discipline = await DisciplineService.get_discipline_by_id(uow, discipline_id)
+            return has_access(user_department_id, discipline.department_id)
+    else:
+        return has_access(user_department_id, department_id) if department_id else False
+
+
 async def check_access_to_education_components(
         request: Request,
         body: dict,
@@ -51,19 +73,16 @@ async def check_access_to_education_components(
     from ..services import EducationComponentService
 
     education_component_id = request.path_params.get("education_component_id")
-    department_id = body.get("department_id")
+    discipline_id = body.get("discipline_id")
 
     if education_component_id:
-        if department_id:
-            return has_access(user_department_id, department_id)
-        else:
-            education_component = await EducationComponentService.get_education_component_by_id(
-                uow,
-                education_component_id
-            )
-            return has_access(user_department_id, education_component.department_id)
+        education_component = await EducationComponentService.get_education_component_by_id(uow, education_component_id)
+        return await check_access_to_discipline(
+            request, body, user_department_id, uow,
+            education_component.discipline_id
+        )
     else:
-        return has_access(user_department_id, department_id) if department_id else False
+        return await check_access_to_discipline(request, body, user_department_id, uow, discipline_id)
 
 
 async def access_control(
@@ -78,11 +97,13 @@ async def access_control(
     user_department_id = user.department_id
     path_parts = request.url.path.split("/")
     resource = path_parts[3]
-
+    is_accessible = False
     match resource:
         case "departments" | "calculation-academic-workload":
             department_id = request.path_params.get("department_id")
             is_accessible = has_access(user_department_id, department_id) if department_id else False
+        case "disciplines":
+            is_accessible = await check_access_to_discipline(request, body, user_department_id, uow)
         case "teachers":
             is_accessible = await check_access_to_teachers(request, body, user_department_id, uow)
         case "education-components":
