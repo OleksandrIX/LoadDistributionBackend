@@ -1,3 +1,4 @@
+from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -12,7 +13,7 @@ class DisciplineBase(BaseModel):
     credits: float = Field(..., gt=0, le=100)
     hours: int = Field(..., ge=1, le=1000)
     department_id: UUID = Field(...)
-    academic_workload_id: UUID = Field(...)
+    academic_workload_id: Optional[UUID] = Field(None)
 
 
 class DisciplineCreateSchema(DisciplineBase):
@@ -29,5 +30,5 @@ class DisciplineSchema(TimestampMixinSchema, IdMixinSchema, DisciplineBase):
 
 
 class DisciplineWithRelationships(DisciplineSchema):
-    academic_workload: AcademicWorkloadSchema
+    academic_workload: Optional[AcademicWorkloadSchema] = Field(None)
     education_components: list[EducationComponentWithRelationships]

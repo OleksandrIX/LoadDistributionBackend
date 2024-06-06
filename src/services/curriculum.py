@@ -8,7 +8,7 @@ from minio import Minio, S3Error
 from modules.curriculum_parser import processing_of_curriculum
 from .calculation_academic_workload import CalculationAcademicWorkloadService
 from ..config import minio_settings
-from ..exceptions import CurriculumNotFoundException, AcademicWorkloadConflictException
+from ..exceptions import CurriculumNotFoundException
 from ..schemas import *
 from ..utils.curriculum import (get_curriculum_spreadsheet_block_data,
                                 get_current_semester_from_course_and_semester_number)
@@ -129,12 +129,13 @@ class CurriculumService:
                 raise Exception(err)
 
     @staticmethod
-    async def save_curriculum_data(uow: IUnitOfWork,
-                                   curriculum_spreadsheet_blocks: list[CurriculumSpreadsheetBlockSchema]):
-        for spreadsheet_block in curriculum_spreadsheet_blocks:
-            block_data = get_curriculum_spreadsheet_block_data(spreadsheet_block)
-
-            async with uow:
+    async def save_curriculum_data(
+            uow: IUnitOfWork,
+            curriculum_spreadsheet_blocks: list[CurriculumSpreadsheetBlockSchema]
+    ):
+        async with uow:
+            for spreadsheet_block in curriculum_spreadsheet_blocks:
+                block_data = get_curriculum_spreadsheet_block_data(spreadsheet_block)
                 for ec_schema in block_data.education_components:
                     department: DepartmentSchema = await uow.departments.get_one(
                         department_code=ec_schema.department)
@@ -249,20 +250,29 @@ class CurriculumService:
 
                     await uow.commit()
 
-        async with uow:
             disciplines: list = await uow.disciplines.get_all_disciplines_id()
             for discipline_id in disciplines:
-                await CalculationAcademicWorkloadService.calculation_workload_for_discipline(uow, discipline_id)
-            await uow.commit()
+                saved_academic_workload = await CalculationAcademicWorkloadService.calculation_workload_for_discipline(
+                    uow,
+                    discipline_id
+                )
+                discipline = await uow.disciplines.get_one(id=discipline_id)
+                discipline.academic_workload_id = saved_academic_workload.id
+                await uow.disciplines.edit_one(
+                    updated_data=DisciplineSchema(**discipline.model_dump()).model_dump(),
+                    id=discipline.id
+                )
+                await uow.commit()
 
-    async def delete_curriculum_file(self, filename: str):
-        try:
-            self.minio_client.remove_object(
-                bucket_name=minio_settings.MINIO_BUCKET_NAME,
-                object_name=self.curriculum_dir + filename
-            )
-        except S3Error as err:
-            if err.code == "NoSuchKey":
-                raise CurriculumNotFoundException(filename)
-            else:
-                raise Exception(err)
+
+async def delete_curriculum_file(self, filename: str):
+    try:
+        self.minio_client.remove_object(
+            bucket_name=minio_settings.MINIO_BUCKET_NAME,
+            object_name=self.curriculum_dir + filename
+        )
+    except S3Error as err:
+        if err.code == "NoSuchKey":
+            raise CurriculumNotFoundException(filename)
+        else:
+            raise Exception(err)

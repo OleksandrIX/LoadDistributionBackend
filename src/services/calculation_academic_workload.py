@@ -1,9 +1,10 @@
 from functools import reduce
 
-from ..exceptions import DisciplineNotFoundException, AcademicWorkloadConflictException
+from ..exceptions import DisciplineNotFoundException
 from ..schemas import (DisciplineWithRelationships,
                        WorkloadFormulaSchema,
-                       AcademicWorkloadCreateSchema)
+                       AcademicWorkloadCreateSchema,
+                       AcademicWorkloadSchema)
 from ..utils.calculation_workload import (calculate_hours,
                                           calculation_workload,
                                           convert_to_education_components_per_course)
@@ -15,8 +16,8 @@ class CalculationAcademicWorkloadService:
     async def calculation_workload_for_discipline(
             uow: IUnitOfWork,
             discipline_id: str
-    ):
-        async with (uow):
+    ) -> AcademicWorkloadSchema:
+        async with uow:
             academic_workload: AcademicWorkloadCreateSchema = AcademicWorkloadCreateSchema(
                 discipline_id=discipline_id
             )
@@ -58,13 +59,6 @@ class CalculationAcademicWorkloadService:
                     number_of_groups=len(study_groups),
                     **academic_workload.model_dump()
                 )
-
-            is_exists = await uow.academic_workload.is_exists(
-                **academic_workload.model_dump()
-            )
-
-            if is_exists:
-                raise AcademicWorkloadConflictException()
 
             saved_academic_workload = await uow.academic_workload.create_one(data=academic_workload.model_dump())
             await uow.commit()
