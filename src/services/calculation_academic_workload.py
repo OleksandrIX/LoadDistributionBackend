@@ -1,3 +1,4 @@
+from loguru import logger
 from functools import reduce
 
 from ..exceptions import DisciplineNotFoundException
@@ -61,5 +62,6 @@ class CalculationAcademicWorkloadService:
                 )
 
             saved_academic_workload = await uow.academic_workload.create_one(data=academic_workload.model_dump())
+            logger.success(f"Created academic workload for discipline: '{discipline.discipline_name}'")
             await uow.commit()
         return saved_academic_workload

@@ -94,9 +94,10 @@ async def parse_curriculum(
 async def save_curriculum_data(
         uow: UOWDependencies,
         curriculum_service: CurriculumServiceDependencies,
-        curriculum_data: CurriculumDataRequestSchema
+        curriculum_data: CurriculumDataRequestSchema,
+        data_of_years: str
 ) -> CurriculumDataSavedResponseSchema:
-    await curriculum_service.save_curriculum_data(uow, curriculum_data.curriculum_spreadsheet_blocks)
+    await curriculum_service.save_curriculum_data(uow, curriculum_data.curriculum_spreadsheet_blocks, data_of_years)
 
 
 @router.delete(

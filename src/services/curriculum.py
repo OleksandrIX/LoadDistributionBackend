@@ -131,8 +131,10 @@ class CurriculumService:
     @staticmethod
     async def save_curriculum_data(
             uow: IUnitOfWork,
-            curriculum_spreadsheet_blocks: list[CurriculumSpreadsheetBlockSchema]
+            curriculum_spreadsheet_blocks: list[CurriculumSpreadsheetBlockSchema],
+            data_of_years: str
     ):
+        created_discipline_ids = set()
         async with uow:
             for spreadsheet_block in curriculum_spreadsheet_blocks:
                 block_data = get_curriculum_spreadsheet_block_data(spreadsheet_block)
@@ -151,7 +153,8 @@ class CurriculumService:
                         continue
 
                     discipline: DisciplineSchema = await uow.disciplines.get_one(
-                        discipline_name=ec_schema.education_component_name.strip()
+                        discipline_name=ec_schema.education_component_name.strip(),
+                        data_of_years=data_of_years
                     )
 
                     if not discipline:
@@ -160,9 +163,12 @@ class CurriculumService:
                                 discipline_name=ec_schema.education_component_name.strip(),
                                 credits=ec_schema.credits,
                                 hours=ec_schema.hours,
+                                data_of_years=data_of_years,
                                 department_id=department.id,
                             ).model_dump()
                         )
+                        created_discipline_ids.add(discipline.id)
+                        logger.success(f"Created discipline with name '{discipline.discipline_name}'")
 
                     education_component: EducationComponentSchema = await uow.education_components.get_one(
                         education_component_code=ec_schema.education_component_code.strip(),
@@ -250,8 +256,9 @@ class CurriculumService:
 
                     await uow.commit()
 
-            disciplines: list = await uow.disciplines.get_all_disciplines_id()
-            for discipline_id in disciplines:
+            logger.info("The end of saving data from spreadsheet")
+
+            for discipline_id in created_discipline_ids:
                 saved_academic_workload = await CalculationAcademicWorkloadService.calculation_workload_for_discipline(
                     uow,
                     discipline_id
@@ -262,17 +269,17 @@ class CurriculumService:
                     updated_data=DisciplineSchema(**discipline.model_dump()).model_dump(),
                     id=discipline.id
                 )
+                logger.success(f"Added academic workload for discipline: {discipline.discipline_name}")
                 await uow.commit()
 
-
-async def delete_curriculum_file(self, filename: str):
-    try:
-        self.minio_client.remove_object(
-            bucket_name=minio_settings.MINIO_BUCKET_NAME,
-            object_name=self.curriculum_dir + filename
-        )
-    except S3Error as err:
-        if err.code == "NoSuchKey":
-            raise CurriculumNotFoundException(filename)
-        else:
-            raise Exception(err)
+    async def delete_curriculum_file(self, filename: str):
+        try:
+            self.minio_client.remove_object(
+                bucket_name=minio_settings.MINIO_BUCKET_NAME,
+                object_name=self.curriculum_dir + filename
+            )
+        except S3Error as err:
+            if err.code == "NoSuchKey":
+                raise CurriculumNotFoundException(filename)
+            else:
+                raise Exception(err)

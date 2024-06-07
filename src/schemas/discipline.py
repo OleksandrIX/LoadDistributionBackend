@@ -12,6 +12,7 @@ class DisciplineBase(BaseModel):
     discipline_name: str = Field(...)
     credits: float = Field(..., gt=0, le=100)
     hours: int = Field(..., ge=1, le=1000)
+    data_of_years: str = Field(..., max_length=10)
     department_id: UUID = Field(...)
     academic_workload_id: Optional[UUID] = Field(None)
 
