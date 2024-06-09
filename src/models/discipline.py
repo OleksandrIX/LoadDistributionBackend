@@ -14,8 +14,8 @@ class DisciplineModel(LoadDistributionBase, IdMixin, TimestampMixin):
     hours = Column(SmallInteger, nullable=False)
     data_of_years = Column(String(10), nullable=False)
 
-    department_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), nullable=False)
-    academic_workload_id = Column(UUID(as_uuid=True), ForeignKey("academic_workloads.id"), nullable=True)
+    department_id = Column(UUID(as_uuid=True), ForeignKey("departments.id", ondelete="CASCADE"), nullable=False)
+    academic_workload_id = Column(UUID(as_uuid=True), ForeignKey("academic_workloads.id", ondelete="CASCADE"), nullable=True)
 
     department = relationship(
         argument="DepartmentModel",

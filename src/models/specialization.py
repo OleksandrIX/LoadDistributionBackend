@@ -11,7 +11,7 @@ class SpecializationModel(LoadDistributionBase, IdMixin, TimestampMixin):
 
     specialization_code = Column(String(20))
     specialization_name = Column(String(255), nullable=False)
-    specialty_id = Column(UUID(as_uuid=True), ForeignKey("specialties.id"), nullable=False)
+    specialty_id = Column(UUID(as_uuid=True), ForeignKey("specialties.id", ondelete="CASCADE"), nullable=False)
 
     specialty = relationship(
         argument="SpecialtyModel",

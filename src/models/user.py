@@ -16,7 +16,7 @@ class UserModel(LoadDistributionBase, IdMixin, TimestampMixin):
                        name="role_enum",
                        schema="load_distribution"), nullable=False)
 
-    department_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"))
+    department_id = Column(UUID(as_uuid=True), ForeignKey("departments.id", ondelete="SET NULL"))
 
     department = relationship("DepartmentModel", back_populates="users")
 

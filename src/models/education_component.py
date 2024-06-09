@@ -19,8 +19,8 @@ class EducationComponentModel(LoadDistributionBase, IdMixin, TimestampMixin):
     course_study = Column(SmallInteger, nullable=False)
     numbers_of_flows = Column(SmallInteger, nullable=False, default=0)
 
-    discipline_id = Column(UUID(as_uuid=True), ForeignKey("disciplines.id"), nullable=False)
-    specialization_id = Column(UUID(as_uuid=True), ForeignKey("specializations.id"), nullable=False)
+    discipline_id = Column(UUID(as_uuid=True), ForeignKey("disciplines.id", ondelete="CASCADE"), nullable=False)
+    specialization_id = Column(UUID(as_uuid=True), ForeignKey("specializations.id", ondelete="CASCADE"), nullable=False)
 
     discipline = relationship(
         argument="DisciplineModel",

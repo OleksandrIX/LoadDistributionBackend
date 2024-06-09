@@ -14,7 +14,7 @@ class SemesterModel(LoadDistributionBase, IdMixin, TimestampMixin):
     reporting_type = Column(Enum(*reporting_type_enum_args,
                                  name="reporting_type_enum",
                                  schema="load_distribution"), nullable=False)
-    education_component_id = Column(UUID(as_uuid=True), ForeignKey("education_components.id"), nullable=False)
+    education_component_id = Column(UUID(as_uuid=True), ForeignKey("education_components.id", ondelete="CASCADE"), nullable=False)
 
     education_component = relationship(
         argument="EducationComponentModel",
