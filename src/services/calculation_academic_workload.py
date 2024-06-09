@@ -29,7 +29,7 @@ class CalculationAcademicWorkloadService:
             study_group_id: str = None,
             lecture_only: bool = False,
             without_lecture: bool = False,
-    ) -> AcademicWorkloadSchema:
+    ) -> AcademicWorkloadCreateSchema:
         async with uow:
             academic_workload = AcademicWorkloadCreateSchema()
             formulas = await uow.academic_workload_formula.get_all()
@@ -77,13 +77,25 @@ class CalculationAcademicWorkloadService:
 
                 if not lecture_only:
                     for education_component in education_component_per_course:
-                        academic_workload = calculation_workload(
-                            academic_workload,
-                            education_component,
-                            formulas_dict,
-                            number_listeners,
-                            number_of_groups
-                        )
+                        if not study_group_id:
+                            academic_workload = calculation_workload(
+                                academic_workload,
+                                education_component,
+                                formulas_dict,
+                                number_listeners=sum(
+                                    study_group.number_listeners
+                                    for study_group in education_component.study_groups
+                                ),
+                                number_of_groups=len(education_component.study_groups)
+                            )
+                        else:
+                            academic_workload = calculation_workload(
+                                academic_workload,
+                                education_component,
+                                formulas_dict,
+                                number_listeners,
+                                number_of_groups
+                            )
 
                 academic_workload.consultation_hours = calculate_hours(
                     formula=formulas_dict["consultation_hours"],
@@ -91,7 +103,11 @@ class CalculationAcademicWorkloadService:
                     **academic_workload.model_dump()
                 )
 
-            return academic_workload
+            academic_workload_dict = academic_workload.model_dump()
+            for key in academic_workload_dict:
+                if isinstance(academic_workload_dict[key], float):
+                    academic_workload_dict[key] = round(academic_workload_dict[key], 2)
+            return AcademicWorkloadCreateSchema(**academic_workload_dict)
 
     @staticmethod
     async def calculation_workload_for_discipline(uow: IUnitOfWork, discipline_id: str) -> AcademicWorkloadSchema:
