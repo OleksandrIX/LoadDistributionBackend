@@ -46,6 +46,7 @@ class DisciplineModel(LoadDistributionBase, IdMixin, TimestampMixin):
         UniqueConstraint(
             "discipline_name",
             "data_of_years",
+            "department_id",
             name="discipline_unique_combination"
         ),
     )

@@ -1,3 +1,4 @@
+from loguru import logger
 from json import JSONDecodeError
 
 from fastapi import Request, Depends
@@ -85,6 +86,38 @@ async def check_access_to_education_components(
         return await check_access_to_discipline(request, body, user_department_id, uow, discipline_id)
 
 
+async def check_access_to_calculation_academic_workload(
+        request: Request,
+        user_department_id: str,
+        uow: IUnitOfWork
+) -> bool:
+    from ..services import EducationComponentService, DisciplineService
+
+    discipline_id = request.path_params.get("discipline_id")
+    education_component_id = request.path_params.get("education_component_id")
+    education_component_ids = request.query_params.getlist("education_component_ids")
+
+    discipline = None
+    if discipline_id:
+        discipline = await DisciplineService.get_discipline_by_id(uow, discipline_id)
+
+    if education_component_id:
+        education_component = await EducationComponentService.get_education_component_by_id(uow, education_component_id)
+        discipline = await DisciplineService.get_discipline_by_id(uow, education_component.discipline_id)
+
+    if education_component_ids:
+        for education_component_id in education_component_ids:
+            education_component = await EducationComponentService.get_education_component_by_id(
+                uow,
+                education_component_id
+            )
+            discipline = await DisciplineService.get_discipline_by_id(uow, education_component.discipline_id)
+            if not has_access(user_department_id, discipline.department_id) if discipline else False:
+                return False
+
+    return has_access(user_department_id, discipline.department_id) if discipline else False
+
+
 async def access_control(
         request: Request,
         body: dict = Depends(get_request_body),
@@ -99,7 +132,7 @@ async def access_control(
     resource = path_parts[3]
     is_accessible = False
     match resource:
-        case "departments" | "calculation-academic-workload":
+        case "departments":
             department_id = request.path_params.get("department_id")
             is_accessible = has_access(user_department_id, department_id) if department_id else False
         case "disciplines":
@@ -108,6 +141,8 @@ async def access_control(
             is_accessible = await check_access_to_teachers(request, body, user_department_id, uow)
         case "education-components":
             is_accessible = await check_access_to_education_components(request, body, user_department_id, uow)
+        case "calculation-academic-workload":
+            is_accessible = await check_access_to_calculation_academic_workload(request, user_department_id, uow)
         case _:
             raise ForbiddenException(message="Unknown resource.")
 

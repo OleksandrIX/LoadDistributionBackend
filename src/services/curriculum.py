@@ -154,7 +154,8 @@ class CurriculumService:
 
                     discipline: DisciplineSchema = await uow.disciplines.get_one(
                         discipline_name=ec_schema.education_component_name.strip(),
-                        data_of_years=data_of_years
+                        data_of_years=data_of_years,
+                        department_id=department.id,
                     )
 
                     if not discipline:
@@ -259,11 +260,21 @@ class CurriculumService:
             logger.info("The end of saving data from spreadsheet")
 
             for discipline_id in created_discipline_ids:
-                saved_academic_workload = await CalculationAcademicWorkloadService.calculation_workload_for_discipline(
-                    uow,
-                    discipline_id
-                )
                 discipline = await uow.disciplines.get_one(id=discipline_id)
+
+                calculation_workload = await CalculationAcademicWorkloadService.calculation_workload_for_discipline(
+                    uow=uow,
+                    discipline_id=discipline_id
+                )
+                logger.info(f"Calculation academic workload for discipline '{discipline.discipline_name}'")
+
+                saved_academic_workload = await CalculationAcademicWorkloadService.save_academic_workload(
+                    uow=uow,
+                    academic_workload=calculation_workload
+                )
+
+                logger.info(f"Saved academic workload for discipline '{discipline.discipline_name}'")
+
                 discipline.academic_workload_id = saved_academic_workload.id
                 await uow.disciplines.edit_one(
                     updated_data=DisciplineSchema(**discipline.model_dump()).model_dump(),

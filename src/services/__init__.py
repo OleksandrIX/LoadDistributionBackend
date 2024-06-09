@@ -11,3 +11,4 @@ from .study_group import StudyGroupService
 from .teacher import TeacherService
 from .user import UserService
 from .discipline import DisciplineService
+from .academic_distribution import AcademicDistributionService
