@@ -4,6 +4,15 @@ from .academic_hours import (AcademicHoursSchema,
 from .academic_task import (AcademicTaskSchema,
                             AcademicTaskCreateSchema,
                             AcademicTaskUpdateSchema)
+from .academic_workload import (AcademicWorkloadSchema,
+                                AcademicWorkloadCreateSchema,
+                                AcademicWorkloadUpdateSchema)
+from .academic_workload_formula import (WorkloadFormulaSchema,
+                                        WorkloadFormulaCreateSchema,
+                                        WorkloadFormulaUpdateSchema)
+from .academic_workload_teacher import (AcademicWorkloadTeacherSchema,
+                                        AcademicWorkloadTeacherCreateBase,
+                                        AcademicWorkloadTeacherUpdateBase)
 from .curriculum import (CurriculumFileSchema,
                          ParsedCurriculumSchema,
                          CurriculumDataRequestSchema,
@@ -14,14 +23,24 @@ from .curriculum import (CurriculumFileSchema,
 from .department import (DepartmentSchema,
                          DepartmentCreateSchema,
                          DepartmentUpdateSchema,
-                         DepartmentWithTeachersSchema)
+                         DepartmentWithTeachersSchema,
+                         DepartmentWithDisciplines,
+                         DepartmentWithRelationships)
+from .discipline import (DisciplineSchema,
+                         DisciplineCreateSchema,
+                         DisciplineUpdateSchema,
+                         DisciplineWithRelationships)
 from .education_component import (EducationComponentSchema,
                                   EducationComponentCreateSchema,
-                                  EducationComponentUpdateSchema)
+                                  EducationComponentUpdateSchema,
+                                  EducationComponenWithWorkloadSchema,
+                                  ECWithAcademicDataSchema,
+                                  EducationComponentWithRelationships)
 from .education_components_study_groups import EducationComponentsStudyGroupsSchema
 from .semester import (SemesterSchema,
                        SemesterCreateSchema,
-                       SemesterUpdateSchema)
+                       SemesterUpdateSchema,
+                       SemesterWithAcademicDataSchema)
 from .specialization import (SpecializationSchema,
                              SpecializationCreateSchema,
                              SpecializationUpdateSchema)

@@ -52,3 +52,8 @@ class UserConflictException(ConflictException):
 class TeacherConflictException(ConflictException):
     def __init__(self, message=None):
         super().__init__(message=message or "Teacher with such data already exists")
+
+
+class AcademicWorkloadConflictException(ConflictException):
+    def __init__(self, message=None):
+        super().__init__(message=message or "Academic workload with such data already exists")

@@ -9,6 +9,7 @@ from ..repositories import *
 
 class IUnitOfWork(ABC):
     departments: Type[DepartmentRepository]
+    disciplines: Type[DisciplineRepository]
     specialties: Type[SpecialtyRepository]
     specializations: Type[SpecializationRepository]
     education_components: Type[EducationComponentRepository]
@@ -19,6 +20,8 @@ class IUnitOfWork(ABC):
     education_components_study_groups: Type[EducationComponentsStudyGroupsRepository]
     users: Type[UserRepository]
     teachers: Type[TeacherRepository]
+    academic_workload: Type[AcademicWorkloadRepository]
+    academic_workload_formula: Type[AcademicWorkloadFormulaRepository]
 
     @abstractmethod
     def __init__(self):
@@ -50,6 +53,7 @@ class UnitOfWork:
         self.session: AsyncSession = self.session_factory()
 
         self.departments = DepartmentRepository(self.session)
+        self.disciplines = DisciplineRepository(self.session)
         self.specialties = SpecialtyRepository(self.session)
         self.specializations = SpecializationRepository(self.session)
         self.education_components = EducationComponentRepository(self.session)
@@ -60,6 +64,8 @@ class UnitOfWork:
         self.education_components_study_groups = EducationComponentsStudyGroupsRepository(self.session)
         self.users = UserRepository(self.session)
         self.teachers = TeacherRepository(self.session)
+        self.academic_workload = AcademicWorkloadRepository(self.session)
+        self.academic_workload_formula = AcademicWorkloadFormulaRepository(self.session)
 
     async def __aexit__(self, *args):
         await self.rollback()

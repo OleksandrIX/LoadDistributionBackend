@@ -5,7 +5,7 @@ from ..schemas import (DepartmentSchema,
                        DepartmentCreateSchema,
                        DepartmentUpdateSchema,
                        DepartmentWithTeachersSchema,
-                       TeacherSchema)
+                       DepartmentWithRelationships)
 from ..services import DepartmentService
 from ..utils.dependencies import UOWDependencies, SecurityDependencies, AdminDependencies, AccessControlDependencies
 
@@ -33,7 +33,17 @@ async def get_departments(uow: UOWDependencies) -> list[DepartmentSchema]:
     dependencies=[AdminDependencies]
 )
 async def get_departments(uow: UOWDependencies) -> list[DepartmentWithTeachersSchema]:
-    return await DepartmentService.get_department_with_teachers(uow)
+    return await DepartmentService.get_departments_with_teachers(uow)
+
+
+@router.get(
+    path="/education-components",
+    response_model=list[DepartmentWithRelationships],
+    status_code=200,
+    dependencies=[AdminDependencies]
+)
+async def get_department_by_id(uow: UOWDependencies) -> list[DepartmentWithRelationships]:
+    return await DepartmentService.get_departments_with_relationships(uow)
 
 
 @router.get(
@@ -48,12 +58,22 @@ async def get_department_by_id(uow: UOWDependencies, department_id: str) -> Depa
 
 @router.get(
     path="/{department_id}/teachers",
-    response_model=list[TeacherSchema],
+    response_model=DepartmentWithTeachersSchema,
     status_code=200,
     dependencies=[AccessControlDependencies]
 )
-async def get_department_by_id(uow: UOWDependencies, department_id: str) -> list[TeacherSchema]:
-    return await DepartmentService.get_all_teachers_in_department_by_id(uow, department_id)
+async def get_department_by_id(uow: UOWDependencies, department_id: str) -> DepartmentWithTeachersSchema:
+    return await DepartmentService.get_deparment_by_id_with_teachers(uow, department_id)
+
+
+@router.get(
+    path="/{department_id}/education-components",
+    response_model=DepartmentWithRelationships,
+    status_code=200,
+    dependencies=[AccessControlDependencies]
+)
+async def get_department_by_id(uow: UOWDependencies, department_id: str) -> DepartmentWithRelationships:
+    return await DepartmentService.get_deparment_by_id_with_relationships(uow, department_id)
 
 
 @router.post(

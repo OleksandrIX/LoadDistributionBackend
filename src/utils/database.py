@@ -4,7 +4,13 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 
 from ..config import database_settings
 
-psql_engine: AsyncEngine = create_async_engine(url=database_settings.database_url, echo=False)
+psql_engine: AsyncEngine = create_async_engine(
+    url=database_settings.database_url,
+    pool_size=12,
+    max_overflow=24,
+    echo=False
+)
+
 async_session_maker = async_sessionmaker(bind=psql_engine, autoflush=False, expire_on_commit=False)
 
 
