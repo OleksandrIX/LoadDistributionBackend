@@ -1,7 +1,8 @@
 from sqlalchemy import select
+from loguru import logger
 
 from ..models import DepartmentModel
-from ..schemas import DepartmentWithTeachersSchema, DepartmentWithEducationComponentsSchema
+from ..schemas import DepartmentWithTeachersSchema, DepartmentWithDisciplines, DepartmentWithRelationships
 from ..utils.repository import SQLAlchemyRepository
 
 
@@ -14,11 +15,19 @@ class DepartmentRepository(SQLAlchemyRepository):
         departments = result.scalars().all()
         return [row.to_read_model_with_teachers() for row in departments]
 
-    async def get_all_with_education_components(self, **filter_by) -> list[DepartmentWithEducationComponentsSchema]:
+    async def get_all_with_education_components(self, **filter_by) -> list[DepartmentWithDisciplines]:
         query = select(self.model).filter_by(**filter_by)
         result = await self.session.execute(query)
         departments = result.scalars().all()
-        return [row.to_read_model_with_education_components() for row in departments]
+        departments = [row.to_read_model_with_disciplines() for row in departments]
+        return departments
+
+    async def get_all_with_relationships(self, **filter_by) -> list[DepartmentWithRelationships]:
+        query = select(self.model).filter_by(**filter_by)
+        result = await self.session.execute(query)
+        departments = result.scalars().all()
+        departments = [row.to_read_model_with_relationships() for row in departments]
+        return departments
 
     async def get_deparment_by_id_with_teachers(self, department_id: str) -> DepartmentWithTeachersSchema:
         query = select(self.model).filter_by(id=department_id)
@@ -29,8 +38,14 @@ class DepartmentRepository(SQLAlchemyRepository):
     async def get_department_by_id_with_education_components(
             self,
             department_id: str
-    ) -> DepartmentWithEducationComponentsSchema:
+    ) -> DepartmentWithDisciplines:
         query = select(self.model).filter_by(id=department_id)
         result = await self.session.execute(query)
-        department = result.scalars().first().to_read_model_with_education_components()
+        department = result.scalars().first().to_read_model_with_disciplines()
+        return department
+
+    async def get_department_by_id_with_relationships(self, department_id: str) -> DepartmentWithRelationships:
+        query = select(self.model).filter_by(id=department_id)
+        result = await self.session.execute(query)
+        department = result.scalars().first().to_read_model_with_relationships()
         return department

@@ -13,7 +13,7 @@ class AcademicTaskModel(LoadDistributionBase, IdMixin, TimestampMixin):
     modular_control_works = Column(SmallInteger, nullable=False)
     essays = Column(SmallInteger, nullable=False)
     calculation_graphic_works = Column(SmallInteger, nullable=False)
-    semester_id = Column(UUID(as_uuid=True), ForeignKey("semesters.id"), nullable=False)
+    semester_id = Column(UUID(as_uuid=True), ForeignKey("semesters.id", ondelete="CASCADE"), nullable=False)
 
     semester = relationship("SemesterModel", back_populates="academic_task", uselist=False)
 

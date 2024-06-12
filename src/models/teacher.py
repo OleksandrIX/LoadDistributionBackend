@@ -33,9 +33,14 @@ class TeacherModel(LoadDistributionBase, IdMixin, TimestampMixin):
     teacher_rate = Column(Numeric(4, 2), nullable=False)
     is_civilian = Column(Boolean, nullable=False)
 
-    department_id = Column(UUID(as_uuid=True), ForeignKey("departments.id"), nullable=False)
+    department_id = Column(UUID(as_uuid=True), ForeignKey("departments.id", ondelete="CASCADE"), nullable=False)
 
     department = relationship("DepartmentModel", back_populates="teachers")
+    academic_workloads = relationship(
+        argument="AcademicWorkloadTeacherModel",
+        back_populates="teacher",
+        lazy="selectin"
+    )
 
     __table_args__ = (
         UniqueConstraint("last_name", "first_name", "middle_name", name="teachers_full_name_unique_combination"),

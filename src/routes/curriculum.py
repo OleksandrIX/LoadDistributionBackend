@@ -87,20 +87,17 @@ async def parse_curriculum(
 
 @router.post(
     path="/save",
-    response_model=CurriculumDataSavedResponseSchema,
+    response_model=None,
     status_code=201,
     dependencies=[AdminDependencies]
 )
 async def save_curriculum_data(
         uow: UOWDependencies,
         curriculum_service: CurriculumServiceDependencies,
-        curriculum_data: CurriculumDataRequestSchema
+        curriculum_data: CurriculumDataRequestSchema,
+        data_of_years: str
 ) -> CurriculumDataSavedResponseSchema:
-    education_components = await curriculum_service.save_curriculum_data(
-        uow,
-        curriculum_data.curriculum_spreadsheet_blocks
-    )
-    return CurriculumDataSavedResponseSchema(education_components=education_components)
+    await curriculum_service.save_curriculum_data(uow, curriculum_data.curriculum_spreadsheet_blocks, data_of_years)
 
 
 @router.delete(

@@ -14,7 +14,7 @@ class AcademicHoursModel(LoadDistributionBase, IdMixin, TimestampMixin):
     group_hours = Column(SmallInteger, nullable=False)
     practical_hours = Column(SmallInteger, nullable=False)
     self_study_hours = Column(SmallInteger, nullable=False)
-    semester_id = Column(UUID(as_uuid=True), ForeignKey("semesters.id"), nullable=False)
+    semester_id = Column(UUID(as_uuid=True), ForeignKey("semesters.id", ondelete="CASCADE"), nullable=False)
 
     semester = relationship("SemesterModel", back_populates="academic_hours", uselist=False)
 

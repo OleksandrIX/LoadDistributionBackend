@@ -74,3 +74,9 @@ class TeacherNotFoundException(NotFoundException):
     def __init__(self, teacher_id):
         message = f"Teacher with id '{teacher_id}' not found"
         super().__init__(message=message)
+
+
+class DisciplineNotFoundException(NotFoundException):
+    def __init__(self, discipline_id):
+        message = f"Discipline with id '{discipline_id}' not found"
+        super().__init__(message=message)
