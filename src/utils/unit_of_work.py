@@ -22,6 +22,7 @@ class IUnitOfWork(ABC):
     teachers: Type[TeacherRepository]
     academic_workload: Type[AcademicWorkloadRepository]
     academic_workload_formula: Type[AcademicWorkloadFormulaRepository]
+    academic_workload_teacher: Type[AcademicWorkloadTeacherRepository]
 
     @abstractmethod
     def __init__(self):
@@ -66,6 +67,7 @@ class UnitOfWork:
         self.teachers = TeacherRepository(self.session)
         self.academic_workload = AcademicWorkloadRepository(self.session)
         self.academic_workload_formula = AcademicWorkloadFormulaRepository(self.session)
+        self.academic_workload_teacher = AcademicWorkloadTeacherRepository(self.session)
 
     async def __aexit__(self, *args):
         await self.rollback()

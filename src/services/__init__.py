@@ -12,3 +12,4 @@ from .teacher import TeacherService
 from .user import UserService
 from .discipline import DisciplineService
 from .academic_distribution import AcademicDistributionService
+from .academic_workload import AcademicWorkloadService

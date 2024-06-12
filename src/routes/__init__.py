@@ -13,6 +13,7 @@ from .study_group import router as study_group_router
 from .teacher import router as teacher_router
 from .user import router as user_router
 from .academic_distribution_session import router as academic_distribution_session_router
+from .academic_workload import router as academic_workload_router
 
 all_routers = [
     auth_router,
@@ -30,4 +31,5 @@ all_routers = [
     curriculum_router,
     calculation_academic_workload_router,
     academic_distribution_session_router,
+    academic_workload_router
 ]

@@ -14,11 +14,11 @@ class AcademicWorkloadTeacherBase(BaseModel):
     teacher_id: UUID = Field(...)
 
 
-class AcademicWorkloadTeacherCreateBase(AcademicWorkloadTeacherBase):
+class AcademicWorkloadTeacherCreateSchema(AcademicWorkloadTeacherBase):
     ...
 
 
-class AcademicWorkloadTeacherUpdateBase(AcademicWorkloadTeacherBase):
+class AcademicWorkloadTeacherUpdateSchema   (AcademicWorkloadTeacherBase):
     ...
 
 

@@ -11,8 +11,8 @@ from .academic_workload_formula import (WorkloadFormulaSchema,
                                         WorkloadFormulaCreateSchema,
                                         WorkloadFormulaUpdateSchema)
 from .academic_workload_teacher import (AcademicWorkloadTeacherSchema,
-                                        AcademicWorkloadTeacherCreateBase,
-                                        AcademicWorkloadTeacherUpdateBase)
+                                        AcademicWorkloadTeacherCreateSchema,
+                                        AcademicWorkloadTeacherUpdateSchema)
 from .curriculum import (CurriculumFileSchema,
                          ParsedCurriculumSchema,
                          CurriculumDataRequestSchema,

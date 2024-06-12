@@ -12,3 +12,4 @@ from .study_group import StudyGroupRepository
 from .teacher import TeacherRepository
 from .user import UserRepository
 from .discipline import DisciplineRepository
+from .academic_workload_teacher import AcademicWorkloadTeacherRepository
