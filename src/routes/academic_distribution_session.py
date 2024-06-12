@@ -9,7 +9,7 @@ AcademicDistributionServiceDependencies = Annotated[AcademicDistributionService,
 
 router = APIRouter(
     prefix="/api/v1/academic-distribution-sessions",
-    tags=["Academic Workload"],
+    tags=["Academic Workload Session"],
     dependencies=[SecurityDependencies]
 )
 
